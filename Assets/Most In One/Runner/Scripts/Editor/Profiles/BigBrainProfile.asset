@@ -1,0 +1,316 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c64df24d1c2b4fd6980d3389700496d, type: 3}
+  m_Name: BigBrainProfile
+  m_EditorClassIdentifier: 
+  StartWorldPosition: {x: 0, y: 0, z: 15}
+  RoadPrefab: {fileID: 1484151704149173511, guid: 961b6fe0ec89349f6b718fdb56393c7d, type: 3}
+  RepeatTimes: 9
+  OffsetBetweenParts: {x: 0, y: 0, z: 15}
+  OffsetFromStartZ: 0
+  OffsetBeforeEndlineZ: 8
+  Step: {x: 0, y: 0, z: 10}
+  RoadWidth: 5.8
+  Parts:
+  - Name: Left Only
+    Prefab: {fileID: 2285372877177848142, guid: 4403ea196c0464268acd462c6e8eb312, type: 3}
+    Separation: 1
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 1
+    GatePresets:
+    - Sign: x
+      GateRange:
+        min: 1
+        max: 3
+      Step: 0.5
+      NoZero: 1
+    - Sign: "\xF7"
+      GateRange:
+        min: 1
+        max: 3
+      Step: 0.5
+      NoZero: 1
+    - Sign: +
+      GateRange:
+        min: -50
+        max: 50
+      Step: 10
+      NoZero: 1
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Right Only
+    Prefab: {fileID: 2285372877177848142, guid: 91f3fe6bf7b924e24a8583bc58e29ad6, type: 3}
+    Separation: 1
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 1
+    GatePresets:
+    - Sign: x
+      GateRange:
+        min: 1
+        max: 3
+      Step: 0.5
+      NoZero: 1
+    - Sign: "\xF7"
+      GateRange:
+        min: 1
+        max: 3
+      Step: 0.5
+      NoZero: 1
+    - Sign: +
+      GateRange:
+        min: -50
+        max: 50
+      Step: 10
+      NoZero: 1
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Left Only Anim
+    Prefab: {fileID: 2285372877177848142, guid: 59ab40d2cefad4464abee7a85b1fa05b, type: 3}
+    Separation: 1
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 1
+    GatePresets:
+    - Sign: x
+      GateRange:
+        min: 1
+        max: 3
+      Step: 0.5
+      NoZero: 1
+    - Sign: "\xF7"
+      GateRange:
+        min: 1
+        max: 3
+      Step: 0.5
+      NoZero: 1
+    - Sign: +
+      GateRange:
+        min: -50
+        max: 50
+      Step: 10
+      NoZero: 1
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Right Only Anim
+    Prefab: {fileID: 2285372877177848142, guid: 8ba9ca16372b84040a06dd396d5ddc4f, type: 3}
+    Separation: 1
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 1
+    GatePresets:
+    - Sign: x
+      GateRange:
+        min: 1
+        max: 3
+      Step: 0.5
+      NoZero: 1
+    - Sign: "\xF7"
+      GateRange:
+        min: 1
+        max: 3
+      Step: 0.5
+      NoZero: 1
+    - Sign: +
+      GateRange:
+        min: -50
+        max: 50
+      Step: 10
+      NoZero: 1
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: TwoGates
+    Prefab: {fileID: 2285372877177848142, guid: 0a31d5777a7bc4621a6c3053b13a14eb, type: 3}
+    Separation: 1
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 5
+    AsAGate: 1
+    GatePresets:
+    - Sign: x
+      GateRange:
+        min: 1
+        max: 3
+      Step: 0.5
+      NoZero: 1
+    - Sign: "\xF7"
+      GateRange:
+        min: 1
+        max: 3
+      Step: 0.5
+      NoZero: 1
+    - Sign: +
+      GateRange:
+        min: -50
+        max: 50
+      Step: 10
+      NoZero: 1
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: 3 Cones
+    Prefab: {fileID: 5970004837805625781, guid: e4d8a1ced36764553a3f41950d6f6036, type: 3}
+    Separation: 1
+    ExtraStepZ: -6
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1.5
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: 3 Signs
+    Prefab: {fileID: 643302928746451195, guid: 1b411cde5225d447ea9cab777852d524, type: 3}
+    Separation: 1
+    ExtraStepZ: -6
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1.5
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Random Sign
+    Prefab: {fileID: 643302928746451195, guid: 8669c7cf33b2f40c78c30247d40bf7ae, type: 3}
+    Separation: 1
+    ExtraStepZ: -6
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1.5
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Line Barrier
+    Prefab: {fileID: 8915342016052787295, guid: 953fe82850b464ffaa680823740a4e43, type: 3}
+    Separation: 1
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1.5
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Gems Random Line
+    Prefab: {fileID: 365819190789010607, guid: a3ef84bb6c2894a5fa83efd2601f3102, type: 3}
+    Separation: 1
+    ExtraStepZ: -2
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Gems Row
+    Prefab: {fileID: 365819190789010607, guid: be1f1cb9743b04315a3b53b18c30e96f, type: 3}
+    Separation: 1
+    ExtraStepZ: -6
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 3
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  EndlinePrefab: {fileID: 3584179993202507913, guid: a8c1b2b8beb1a4cacbaa138d923b1271, type: 3}
+  OffsetFromStart: {x: 0, y: 0, z: 126.5}
+  HaveBonus: 1
+  RepeatedPrefab: {fileID: 346876096409251860, guid: b72877f8a41ab414fa4f7489629b58d2, type: 3}
+  Amount: 45
+  OffsetPerStep: {x: 0, y: 0, z: 2.7}
+  OffsetFromEndpoint: {x: 0, y: 0, z: 9}
+  IsGate: 0
+  GateSign: x
+  GateStartValue: 1
+  GateJumpPerStep: 0.2
+  OutputSign: x
+  OutputStartValue: 1
+  OutputJumpPerStep: 0.2
+  TextStartValue: 1
+  TextJumpPerStep: 0.2
+  TextNameInStepChilds:
+  - Text Right
+  - Text Left
+  TargetColorMaterialLerpName: Sign
+  MaterialsLerp:
+  - {fileID: 2100000, guid: 42f6b4f8d17734bb985b7713b397274b, type: 2}
+  SaveAsPrefab: 1
+  FolderPath: Assets/Most In One/Runner/Scenes/Levels/Count
+  BaseLevelName: Level
+  generateButton:
+    _dummy: 0

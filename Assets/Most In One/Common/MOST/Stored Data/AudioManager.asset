@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d757fb01ca894e228dbb772c7cd8acb, type: 3}
+  m_Name: AudioManager
+  m_EditorClassIdentifier: 
+  Mixer: {fileID: 24100000, guid: ada0af3b92bab49fd81a6b3d8f642129, type: 2}
+  MasterGroup: {fileID: 24300002, guid: ada0af3b92bab49fd81a6b3d8f642129, type: 2}
+  MusicGroup: {fileID: -666144728965906915, guid: ada0af3b92bab49fd81a6b3d8f642129, type: 2}
+  SFXGroup: {fileID: 3533095935950098106, guid: ada0af3b92bab49fd81a6b3d8f642129, type: 2}
+  UIGroup: {fileID: 6772723533999297705, guid: ada0af3b92bab49fd81a6b3d8f642129, type: 2}
+  MasterVolumeParam: MasterVolume
+  MusicVolumeParam: MusicVolume
+  SfxVolumeParam: SFXVolume
+  UIVolumeParam: UIVolume
+  MasterVolume: 1
+  Master_IsOn: 1
+  MusicVolume: 1
+  Music_IsOn: 1
+  SFXVolume: 1
+  SFX_IsOn: 1
+  UIVolume: 1
+  UI_IsOn: 1
+  autoLoadOnEnable: 1
+  autoSaveOnChange: 1
+  autoSaveInEditor: 0
+  databaseKey: audio_state

@@ -1,0 +1,167 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c64df24d1c2b4fd6980d3389700496d, type: 3}
+  m_Name: CountProfile
+  m_EditorClassIdentifier: 
+  StartWorldPosition: {x: 0, y: 0, z: 12.5}
+  RoadPrefab: {fileID: 7272406796611904730, guid: 52da12d280a3d4069a44ed9d01d30dc5, type: 3}
+  RepeatTimes: 9
+  OffsetBetweenParts: {x: 0, y: 0, z: 15}
+  OffsetFromStartZ: 0
+  OffsetBeforeEndlineZ: 6
+  Step: {x: 0, y: 0, z: 6}
+  RoadWidth: 5.8
+  Parts:
+  - Name: Gates
+    Prefab: {fileID: 2285372877177848142, guid: 15e38323c5a7d41daae533fb6e9f2342, type: 3}
+    Separation: 1
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 3
+    AsAGate: 1
+    GatePresets:
+    - Sign: x
+      GateRange:
+        min: 1
+        max: 3
+      Step: 0.5
+      NoZero: 1
+    - Sign: "\xF7"
+      GateRange:
+        min: 1
+        max: 3
+      Step: 0.5
+      NoZero: 1
+    - Sign: +
+      GateRange:
+        min: -50
+        max: 50
+      Step: 5
+      NoZero: 1
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Jump Zone
+    Prefab: {fileID: 1483694560272181308, guid: be8aa9d7bf9534159b19314d3fc8b4a6, type: 3}
+    Separation: 1
+    ExtraStepZ: 1
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 3
+    Chance: 1
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Enemy zone
+    Prefab: {fileID: 4736204811082917988, guid: fbbe6e2cffc2944eba60409a848aa41c, type: 3}
+    Separation: 1
+    ExtraStepZ: 1
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 3
+    Chance: 1
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Gem line
+    Prefab: {fileID: 365819190789010607, guid: be1f1cb9743b04315a3b53b18c30e96f, type: 3}
+    Separation: 1
+    ExtraStepZ: -3
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 2
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: 3DeadZones
+    Prefab: {fileID: 5795946316480969468, guid: c2b2ea05ce5af4f39842f2d37dcab123, type: 3}
+    Separation: 1
+    ExtraStepZ: 4
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Random Gem line
+    Prefab: {fileID: 365819190789010607, guid: a3ef84bb6c2894a5fa83efd2601f3102, type: 3}
+    Separation: 1
+    ExtraStepZ: 1
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  EndlinePrefab: {fileID: 2780684905114753743, guid: d7b410c2ed5e346a8b495a10dab6e383, type: 3}
+  OffsetFromStart: {x: 0, y: 0, z: 80}
+  HaveBonus: 1
+  RepeatedPrefab: {fileID: 7117745804011765815, guid: 9b0118e1d25a04819a8c6843975f156a, type: 3}
+  Amount: 45
+  OffsetPerStep: {x: 0, y: 0.9, z: 1.25}
+  OffsetFromEndpoint: {x: 0, y: 0, z: 30}
+  IsGate: 0
+  GateSign: x
+  GateStartValue: 1
+  GateJumpPerStep: 0.2
+  OutputSign: x
+  OutputStartValue: 1
+  OutputJumpPerStep: 0.2
+  TextStartValue: 1
+  TextJumpPerStep: 0.2
+  TextNameInStepChilds:
+  - Multiply Text
+  TargetColorMaterialLerpName: Cube
+  MaterialsLerp:
+  - {fileID: 2100000, guid: 53acd70b1de9a407b919e593a125982f, type: 2}
+  - {fileID: 2100000, guid: b9f188a582ef248109c5b86e558b052d, type: 2}
+  - {fileID: 2100000, guid: dbc6dab87ed964e80a5aac63f6d21b5f, type: 2}
+  - {fileID: 2100000, guid: efdab7595281d4341998d86c30346eb4, type: 2}
+  - {fileID: 2100000, guid: bda0606fd55ce4c6ebd2d56fb96233ac, type: 2}
+  SaveAsPrefab: 1
+  FolderPath: Assets/Most In One/Runner/Scenes/Levels/Count
+  BaseLevelName: Level
+  generateButton:
+    _dummy: 0

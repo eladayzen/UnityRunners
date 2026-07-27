@@ -1,0 +1,217 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd67486e0d1514f749d978e2fad603f3, type: 3}
+  m_Name: ShapeLibrary
+  m_EditorClassIdentifier: 
+  shapes:
+  - id: shape
+    grid:
+      columns: 3
+      rows: 3
+      UseMiniIcon: 0
+      cells:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      states: 010000000000000000000000010000000100000000000000010000000000000000000000
+      hasStartCell: 0
+      startCell: {x: 0, y: 0}
+      hasEndCell: 0
+      endCell: {x: 0, y: 0}
+    chance: 2
+    allowedRotations: 7
+  - id: Side
+    grid:
+      columns: 2
+      rows: 3
+      UseMiniIcon: 0
+      cells:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      states: 010000000100000000000000010000000000000001000000
+      hasStartCell: 0
+      startCell: {x: 0, y: 0}
+      hasEndCell: 0
+      endCell: {x: 0, y: 0}
+    chance: 2
+    allowedRotations: -1
+  - id: shape
+    grid:
+      columns: 2
+      rows: 3
+      UseMiniIcon: 0
+      cells:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      states: 010000000100000001000000000000000100000000000000
+      hasStartCell: 0
+      startCell: {x: 0, y: 0}
+      hasEndCell: 0
+      endCell: {x: 0, y: 0}
+    chance: 2
+    allowedRotations: 7
+  - id: shape
+    grid:
+      columns: 1
+      rows: 3
+      UseMiniIcon: 0
+      cells:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      states: 010000000100000001000000
+      hasStartCell: 0
+      startCell: {x: 0, y: 0}
+      hasEndCell: 0
+      endCell: {x: 0, y: 0}
+    chance: 3
+    allowedRotations: 2
+  - id: Square1
+    grid:
+      columns: 1
+      rows: 1
+      UseMiniIcon: 0
+      cells:
+      - {fileID: 0}
+      states: 01000000
+      hasStartCell: 0
+      startCell: {x: 0, y: 0}
+      hasEndCell: 0
+      endCell: {x: 0, y: 0}
+    chance: 3
+    allowedRotations: 0
+  - id: Square3
+    grid:
+      columns: 3
+      rows: 3
+      UseMiniIcon: 0
+      cells:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      states: 010000000100000001000000010000000100000001000000010000000100000001000000
+      hasStartCell: 0
+      startCell: {x: 0, y: 0}
+      hasEndCell: 0
+      endCell: {x: 0, y: 0}
+    chance: 2
+    allowedRotations: 0
+  - id: Square2
+    grid:
+      columns: 2
+      rows: 2
+      UseMiniIcon: 0
+      cells:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      states: 01000000010000000100000001000000
+      hasStartCell: 0
+      startCell: {x: 0, y: 0}
+      hasEndCell: 0
+      endCell: {x: 0, y: 0}
+    chance: 4
+    allowedRotations: 0
+  - id: Square2
+    grid:
+      columns: 2
+      rows: 2
+      UseMiniIcon: 0
+      cells:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
+      states: 01000000010000000100000000000000
+      hasStartCell: 0
+      startCell: {x: 0, y: 0}
+      hasEndCell: 0
+      endCell: {x: 0, y: 0}
+    chance: 2
+    allowedRotations: -1
+  - id: Square2
+    grid:
+      columns: 2
+      rows: 1
+      UseMiniIcon: 0
+      cells:
+      - {fileID: 0}
+      - {fileID: 0}
+      states: 0100000001000000
+      hasStartCell: 0
+      startCell: {x: 0, y: 0}
+      hasEndCell: 0
+      endCell: {x: 0, y: 0}
+    chance: 2
+    allowedRotations: 1
+  skins:
+  - id: Yellow
+    unitPrefab: {fileID: 3250893605294890078, guid: 8bc7d50cc2f19439eaf33cdf1a76020f, type: 3}
+    chance: 1
+    enableClearPreview: 1
+    clearPreviewSprite: {fileID: 21300000, guid: 1e80f6e08c2594997b5f0317998cdce4, type: 3}
+    clearPreviewTint: {r: 1, g: 0.972549, b: 0.53333336, a: 1}
+    clearPreviewExtraScale: 0.4
+    onClearPrefab: {fileID: 2689295678808821365, guid: 25fe53322a0dc4134b1088e29bea2444, type: 3}
+  - id: Red
+    unitPrefab: {fileID: 3250893605294890078, guid: b85b1aec8d48b45618e6b0006ca666b9, type: 3}
+    chance: 1
+    enableClearPreview: 1
+    clearPreviewSprite: {fileID: 21300000, guid: 1e80f6e08c2594997b5f0317998cdce4, type: 3}
+    clearPreviewTint: {r: 0.9245283, g: 0.2921858, b: 0.3709292, a: 1}
+    clearPreviewExtraScale: 0.4
+    onClearPrefab: {fileID: 2689295678808821365, guid: 200f977fe32f04e1d94bb8a94b7f1881, type: 3}
+  - id: Blue
+    unitPrefab: {fileID: 3250893605294890078, guid: 294fef809bd7a40548c3a2f6d1329470, type: 3}
+    chance: 1
+    enableClearPreview: 1
+    clearPreviewSprite: {fileID: 21300000, guid: 1e80f6e08c2594997b5f0317998cdce4, type: 3}
+    clearPreviewTint: {r: 0.33490568, g: 0.6694106, b: 1, a: 1}
+    clearPreviewExtraScale: 0.4
+    onClearPrefab: {fileID: 2689295678808821365, guid: a278db4c4d3ff4104a434eb4e0482096, type: 3}
+  - id: Green
+    unitPrefab: {fileID: 3250893605294890078, guid: dd48d4578e75c4429b41cedf6d739f3d, type: 3}
+    chance: 1
+    enableClearPreview: 1
+    clearPreviewSprite: {fileID: 21300000, guid: 1e80f6e08c2594997b5f0317998cdce4, type: 3}
+    clearPreviewTint: {r: 0.3511113, g: 1, b: 0.33333337, a: 1}
+    clearPreviewExtraScale: 0.4
+    onClearPrefab: {fileID: 2689295678808821365, guid: ef3416a93e8664a24abd8879a7e4ea6a, type: 3}
+  - id: Pink
+    unitPrefab: {fileID: 3250893605294890078, guid: 14eb2bc3a72954477a1cbee263f265e8, type: 3}
+    chance: 1
+    enableClearPreview: 1
+    clearPreviewSprite: {fileID: 21300000, guid: 1e80f6e08c2594997b5f0317998cdce4, type: 3}
+    clearPreviewTint: {r: 1, g: 0.41037738, b: 0.92045313, a: 1}
+    clearPreviewExtraScale: 0.4
+    onClearPrefab: {fileID: 2689295678808821365, guid: f6029c02cdb0d459dacba5f5a590471d, type: 3}

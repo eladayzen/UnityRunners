@@ -1,0 +1,358 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1571235623563798
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4917822452878504}
+  - component: {fileID: 33390833050769570}
+  - component: {fileID: 23995896805050960}
+  - component: {fileID: 3562895544355797361}
+  - component: {fileID: 5976663660115015373}
+  - component: {fileID: 8513370609675641954}
+  - component: {fileID: 3166291489796655431}
+  m_Layer: 6
+  m_Name: Barrel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4917822452878504
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1571235623563798}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &33390833050769570
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1571235623563798}
+  m_Mesh: {fileID: 8108563764783910780, guid: bbd787778e2ac454cb58651a0e1ac64e, type: 3}
+--- !u!23 &23995896805050960
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1571235623563798}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 4294967295
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 5146847e3610641b5abba6cdad579678, type: 2}
+  - {fileID: 2100000, guid: ed1dc7fbf7c9940b1b5bd6e193a5879c, type: 2}
+  - {fileID: 2100000, guid: de5766f52a1614bddaa3a842e3cede91, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3562895544355797361
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1571235623563798}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.9955378, y: 2.2507849, z: 1.9955375}
+  m_Center: {x: 0.00000295043, y: 1.0994456, z: 0.0000073611736}
+--- !u!114 &5976663660115015373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1571235623563798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 0, g: 0, b: 0, a: 1}
+  outlineWidth: 4
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &8513370609675641954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1571235623563798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 050e4a24e365d49a593aedca5e7af9e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Health: 100
+  MaxHealth: 100
+  DefeatType: 1
+  DelayBeforeApply: 0
+  UseOnTrigger: 0
+  UseOnCollision: 1
+  DamageLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  DamageTags:
+  - Enemy
+  - Damage
+  DestroyDamageObjWhenHit: 0
+  DisableCollisionAfterDamage: 0
+  DefaultDamageAmount: 100
+  HealLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  HealTags: []
+  DestroyHealObjWhenHit: 0
+  DefaultHealAmount: 500
+  EnableHealthBar: 0
+  HealthBar: {fileID: 0}
+  DeactivateOnKillingHit: 0
+  OnTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDefeat:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3166291489796655431}
+        m_TargetAssemblyTypeName: Solo.MOST_IN_ONE.MOST_Action, Assembly-CSharp
+        m_MethodName: PlayAction
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Break Effect
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &3166291489796655431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1571235623563798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b48651fd97064a98aeb23c30c8803fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnableDebug: 0
+  BaseTarget: {fileID: 1571235623563798}
+  actions:
+  - rid: 4303637356098093057
+  - rid: 4303637386910760963
+  - rid: 4303637386910760966
+  references:
+    version: 2
+    RefIds:
+    - rid: 4303637356098093057
+      type: {class: MOSTAction_Spawner, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        Enabled: 1
+        IsPlaying: 0
+        Owner: {fileID: 3166291489796655431}
+        ActionName: Break Effect
+        PlayOnAwake: 0
+        SubActions:
+        - Burst
+        - Break Sound
+        TargetObject: {fileID: 0}
+        TargetChildren: 0
+        SpawnedObject: {fileID: 8507937521054723664, guid: 16173dead05f7458ca348cc5309466f3, type: 3}
+        Offset: {x: 0, y: 0.5, z: 0}
+        AsChild: 0
+        FollowParentScale: 0
+        AutoDestruct: 1
+        LifeTime: 5
+    - rid: 4303637386910760963
+      type: {class: MOSTAction_Burst, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        Enabled: 1
+        IsPlaying: 0
+        Owner: {fileID: 3166291489796655431}
+        ActionName: Burst
+        PlayOnAwake: 0
+        SubActions: []
+        TargetObject: {fileID: 0}
+        Prefabs:
+        - {fileID: 2318170671590911677, guid: 516e06e8d7f814c8ab8205eadef6fe30, type: 3}
+        SpawnCountRange: {x: 10, y: 16}
+        SpawnJitterRadius: 0.35
+        RandomizeRotation: 1
+        ScaleMin: {x: 0.5, y: 0.1, z: 0.6}
+        ScaleMax: {x: 0.7, y: 0.2, z: 2}
+        Mode: 0
+        ExplosionForceRange: {x: 13, y: 22}
+        ExplosionRadius: 4
+        UpwardModifier: 0.2
+        RadialImpulseRange: {x: 6, y: 12}
+        VelocityMin: {x: -2, y: 3, z: -2}
+        VelocityMax: {x: 2, y: 6, z: 2}
+        ExtraImpulseRange: {x: 0, y: 2}
+        RandomTorqueMagnitudeRange: {x: 1, y: 5}
+        AngularVelocityMultiplier: 1
+        UpwardOnlyY: 1
+        MinUpwardY: 1
+    - rid: 4303637386910760966
+      type: {class: MOSTAction_AudioSource, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        Enabled: 1
+        IsPlaying: 0
+        Owner: {fileID: 3166291489796655431}
+        ActionName: Break Sound
+        PlayOnAwake: 0
+        SubActions: []
+        TargetObject: {fileID: 0}
+        OverrideOnReplay: 0
+        DontDestroyOnLoad: 0
+        AudioClip: {fileID: 8300000, guid: c8a847244c9a64e07bcb6d153c163b26, type: 3}
+        OutputAudioMixerGroup: {fileID: 0}
+        Mute: 0
+        BypassEffects: 0
+        BypassListenerEffects: 0
+        BypassReverbZones: 0
+        Loop: 0
+        priority: 128
+        Volume: 0.5
+        Pitch: 1
+        PanStereo: 0
+        SpatialBlend: 0
+        ReverbZoneMix: 1
+        DopplerLevel: 1
+        Spread: 0
+        RolloffMode: 0
+        MinDistance: 1
+        MaxDistance: 500
+        CustomRolloffCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        SpreadCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 1
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 1
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        ReverbZoneMixCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4

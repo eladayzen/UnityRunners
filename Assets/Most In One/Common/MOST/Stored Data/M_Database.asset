@@ -1,0 +1,211 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 255650c603e65411680439b7c8ef977d, type: 3}
+  m_Name: M_Database
+  m_EditorClassIdentifier: 
+  databaseKey: BaseKeys
+  UseInternalStorage: 0
+  initialized: 0
+  entries:
+  - rid: 4303637141020999680
+  - rid: 4303637240451694594
+  - rid: 4303637240451694595
+  - rid: 4303637367902961664
+  - rid: 4303637401255018498
+  - rid: 4303637401255018496
+  - rid: 4303637423004057603
+  - rid: 4303637436783919104
+  - rid: 4303637436783919106
+  - rid: 4303637436783919107
+  - rid: 4303637483824611330
+  - rid: 3636019492142448640
+  - rid: 2626266709748350976
+  - rid: 8679192310843441152
+  - rid: 5192371169123368961
+  references:
+    version: 2
+    RefIds:
+    - rid: 2626266709748350976
+      type: {class: IntData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        DataName: CurrentLevel_Splat
+        id: 12
+        value: 0
+        InitialValue: 1
+        HighestValue: 0
+        EnableMin: 1
+        MinValue: 1
+        EnableMax: 0
+        MaxValue: 100
+    - rid: 3636019492142448640
+      type: {class: IntData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        DataName: 3Road Score
+        id: 11
+        value: 0
+        InitialValue: 0
+        HighestValue: 0
+        EnableMin: 1
+        MinValue: 0
+        EnableMax: 0
+        MaxValue: 100
+    - rid: 4303637141020999680
+      type: {class: IntData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        DataName: CurrentLevel
+        id: 3
+        value: 0
+        InitialValue: 0
+        HighestValue: 0
+        EnableMin: 0
+        MinValue: 1
+        EnableMax: 0
+        MaxValue: 100
+    - rid: 4303637240451694594
+      type: {class: BoolData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        DataName: Bool Data
+        id: 1
+        value: 0
+        InitialValue: 1
+    - rid: 4303637240451694595
+      type: {class: IntData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        DataName: CurrentLevel_Cubey
+        id: 0
+        value: 0
+        InitialValue: 1
+        HighestValue: 0
+        EnableMin: 1
+        MinValue: 1
+        EnableMax: 0
+        MaxValue: 100
+    - rid: 4303637367902961664
+      type: {class: IntData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        DataName: Dodge Template Score
+        id: 2
+        value: 0
+        InitialValue: 0
+        HighestValue: 0
+        EnableMin: 1
+        MinValue: 0
+        EnableMax: 0
+        MaxValue: 100
+    - rid: 4303637401255018496
+      type: {class: IntData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        DataName: CurrentLevel_BigBrain
+        id: 4
+        value: 0
+        InitialValue: 0
+        HighestValue: 0
+        EnableMin: 1
+        MinValue: 1
+        EnableMax: 0
+        MaxValue: 100
+    - rid: 4303637401255018498
+      type: {class: IntData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        DataName: Currency_Gems
+        id: 5
+        value: 0
+        InitialValue: 100
+        HighestValue: 0
+        EnableMin: 1
+        MinValue: 0
+        EnableMax: 0
+        MaxValue: 100
+    - rid: 4303637423004057603
+      type: {class: IntData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        DataName: CurrentLevel_Count
+        id: 6
+        value: 0
+        InitialValue: 0
+        HighestValue: 0
+        EnableMin: 1
+        MinValue: 1
+        EnableMax: 0
+        MaxValue: 100
+    - rid: 4303637436783919104
+      type: {class: IntData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        DataName: CurrentLevel_Pistol
+        id: 7
+        value: 0
+        InitialValue: 1
+        HighestValue: 0
+        EnableMin: 1
+        MinValue: 1
+        EnableMax: 0
+        MaxValue: 100
+    - rid: 4303637436783919106
+      type: {class: IntData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        DataName: CurrentLevel_EpicRunner
+        id: 8
+        value: 0
+        InitialValue: 1
+        HighestValue: 0
+        EnableMin: 1
+        MinValue: 1
+        EnableMax: 0
+        MaxValue: 100
+    - rid: 4303637436783919107
+      type: {class: IntData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        DataName: CurrentLevel_EpicRoad
+        id: 9
+        value: 0
+        InitialValue: 0
+        HighestValue: 0
+        EnableMin: 0
+        MinValue: 0
+        EnableMax: 0
+        MaxValue: 100
+    - rid: 4303637483824611330
+      type: {class: FloatData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        DataName: Runner Score Multiplyer
+        id: 10
+        value: 0
+        InitialValue: 0.8
+        HighestValue: 0
+        EnableMin: 1
+        MinValue: 0.8
+        EnableMax: 0
+        MaxValue: 100
+    - rid: 5192371169123368961
+      type: {class: IntData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        DataName: BlockBlast Score
+        id: 14
+        value: 0
+        InitialValue: 0
+        HighestValue: 0
+        EnableMin: 1
+        MinValue: 0
+        EnableMax: 0
+        MaxValue: 100
+    - rid: 8679192310843441152
+      type: {class: IntData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
+      data:
+        DataName: CurrentLevel_BlockBlast
+        id: 13
+        value: 0
+        InitialValue: 1
+        HighestValue: 0
+        EnableMin: 1
+        MinValue: 1
+        EnableMax: 0
+        MaxValue: 100

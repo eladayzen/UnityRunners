@@ -1,0 +1,239 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c64df24d1c2b4fd6980d3389700496d, type: 3}
+  m_Name: EpicRoad Profile
+  m_EditorClassIdentifier: 
+  StartWorldPosition: {x: 0, y: 0, z: -43}
+  RoadPrefab: {fileID: 0}
+  RepeatTimes: 1
+  OffsetBetweenParts: {x: 0, y: 0, z: 10}
+  OffsetFromStartZ: 10
+  OffsetBeforeEndlineZ: 0
+  Step: {x: 0, y: 0, z: 16}
+  RoadWidth: 24
+  Parts:
+  - Name: Barrel Start
+    Prefab: {fileID: 7477219342578069492, guid: 482dae32f20d247e18155d51ff6009d1, type: 3}
+    Separation: 3
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 1.396873, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 0.1
+    AsAGate: 1
+    GatePresets:
+    - Sign: +
+      GateRange:
+        min: 3
+        max: 7
+      Step: 1
+      NoZero: 1
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Barrel Upgrade Start
+    Prefab: {fileID: 7530989939288560035, guid: eeed169a296e04f50b33895a5f868181, type: 3}
+    Separation: 3
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 3.096877, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 0.2
+    AsAGate: 1
+    GatePresets:
+    - Sign: +
+      GateRange:
+        min: 3
+        max: 10
+      Step: 1
+      NoZero: 1
+    UseGateOutputText: 1
+    OutputSign: +
+    OutputRange:
+      min: 3
+      max: 10
+    OutputStep: 1
+    OutputNoZero: 1
+  - Name: Barrel Upgrade
+    Prefab: {fileID: 7530989939288560035, guid: eeed169a296e04f50b33895a5f868181, type: 3}
+    Separation: 3
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 3.096877, z: 0}
+    IgnoreFirstLines: 1
+    Chance: 3
+    AsAGate: 1
+    GatePresets:
+    - Sign: +
+      GateRange:
+        min: 5
+        max: 50
+      Step: 1
+      NoZero: 1
+    UseGateOutputText: 1
+    OutputSign: +
+    OutputRange:
+      min: 3
+      max: 10
+    OutputStep: 1
+    OutputNoZero: 1
+  - Name: Enemy Big
+    Prefab: {fileID: 5396879819469048875, guid: 9b7fdf39c2f6d4612a98ca0404b2e7bc, type: 3}
+    Separation: 3
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 2
+    Chance: 1
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Enemy Crowd
+    Prefab: {fileID: 2480579046461423949, guid: 02a7e830194eb41e99f0de2dfc5ab09e, type: 3}
+    Separation: 3
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 2
+    Chance: 1
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Gate Children
+    Prefab: {fileID: 1881057152929116038, guid: 8e72f4eb3240b48fda4fbc0ba9441834, type: 3}
+    Separation: 3
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 1
+    Chance: 1.5
+    AsAGate: 1
+    GatePresets:
+    - Sign: x
+      GateRange:
+        min: 1
+        max: 3
+      Step: 1
+      NoZero: 1
+    - Sign: "\xF7"
+      GateRange:
+        min: 1
+        max: 3
+      Step: 1
+      NoZero: 1
+    - Sign: +
+      GateRange:
+        min: -5
+        max: 10
+      Step: 1
+      NoZero: 1
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Barrel
+    Prefab: {fileID: 7477219342578069492, guid: 482dae32f20d247e18155d51ff6009d1, type: 3}
+    Separation: 3
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 1.396873, z: 0}
+    IgnoreFirstLines: 1
+    Chance: 1
+    AsAGate: 1
+    GatePresets:
+    - Sign: +
+      GateRange:
+        min: 5
+        max: 50
+      Step: 1
+      NoZero: 1
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Barrel Children
+    Prefab: {fileID: 9150510136155061362, guid: 8912d3c186a0d4ace9987de83ae46cb5, type: 3}
+    Separation: 3
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 2.55, z: 0}
+    IgnoreFirstLines: 1
+    Chance: 1.5
+    AsAGate: 1
+    GatePresets:
+    - Sign: +
+      GateRange:
+        min: 5
+        max: 50
+      Step: 1
+      NoZero: 1
+    UseGateOutputText: 1
+    OutputSign: +
+    OutputRange:
+      min: 3
+      max: 9
+    OutputStep: 1
+    OutputNoZero: 1
+  - Name: Empty
+    Prefab: {fileID: 3346304831414947380, guid: 0414aebe592ce48c388c7164553e4ce6, type: 3}
+    Separation: 3
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 1
+    Chance: 5
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  EndlinePrefab: {fileID: 0}
+  OffsetFromStart: {x: 0, y: 0, z: 140}
+  HaveBonus: 0
+  RepeatedPrefab: {fileID: 0}
+  Amount: 5
+  OffsetPerStep: {x: 0, y: 0, z: 5}
+  OffsetFromEndpoint: {x: 0, y: 0, z: 0}
+  IsGate: 0
+  GateSign: x
+  GateStartValue: 1
+  GateJumpPerStep: 0.2
+  OutputSign: x
+  OutputStartValue: 1
+  OutputJumpPerStep: 0.2
+  TextStartValue: 1
+  TextJumpPerStep: 0.2
+  TextNameInStepChilds: []
+  TargetColorMaterialLerpName: 
+  MaterialsLerp: []
+  SaveAsPrefab: 1
+  FolderPath: Assets/Most In One/Runner/Scenes/Levels/EpicRoad
+  BaseLevelName: Level
+  generateButton:
+    _dummy: 0

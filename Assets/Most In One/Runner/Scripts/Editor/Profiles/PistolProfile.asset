@@ -1,0 +1,309 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c64df24d1c2b4fd6980d3389700496d, type: 3}
+  m_Name: PistolProfile
+  m_EditorClassIdentifier: 
+  StartWorldPosition: {x: 0, y: 0, z: 12.5}
+  RoadPrefab: {fileID: 1484151704149173511, guid: 961b6fe0ec89349f6b718fdb56393c7d, type: 3}
+  RepeatTimes: 10
+  OffsetBetweenParts: {x: 0, y: 0, z: 15}
+  OffsetFromStartZ: 0
+  OffsetBeforeEndlineZ: 9
+  Step: {x: 0, y: 0, z: 142}
+  RoadWidth: 5.8
+  Parts:
+  - Name: Barrel Gems
+    Prefab: {fileID: 2183309604858931061, guid: 6678cc942aea64892b178d9f96674f1e, type: 3}
+    Separation: 2
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 2.55, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 1
+    GatePresets:
+    - Sign: +
+      GateRange:
+        min: 5
+        max: 50
+      Step: 1
+      NoZero: 1
+    UseGateOutputText: 1
+    OutputSign: +
+    OutputRange:
+      min: 1
+      max: 10
+    OutputStep: 1
+    OutputNoZero: 1
+  - Name: Fixed Health
+    Prefab: {fileID: 7866504971796393640, guid: eb21e5bd96410469b8b053714f1fceaf, type: 3}
+    Separation: 2
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 1
+    GatePresets:
+    - Sign: +
+      GateRange:
+        min: -20
+        max: 20
+      Step: 1
+      NoZero: 1
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Enemy Gun
+    Prefab: {fileID: 1722616055212026078, guid: 94d0f9a2fb1d4472595a02f6e526af24, type: 3}
+    Separation: 2
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Enemy
+    Prefab: {fileID: 887188575307863962, guid: f6af2f70ab889424cb402b0be9cec003, type: 3}
+    Separation: 2
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Fixed FireRate
+    Prefab: {fileID: 5127152832893211304, guid: 2e46ac0bcaa06405087f1dbd73eb5ae1, type: 3}
+    Separation: 2
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 1
+    GatePresets:
+    - Sign: +
+      GateRange:
+        min: -3
+        max: 3
+      Step: 0.5
+      NoZero: 1
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Fixed FireRange
+    Prefab: {fileID: 9019170045022448679, guid: daaa303d2e81d4c65bcbe7553751a21f, type: 3}
+    Separation: 2
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 1
+    GatePresets:
+    - Sign: +
+      GateRange:
+        min: -3
+        max: 3
+      Step: 0.5
+      NoZero: 1
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Gate FireRate
+    Prefab: {fileID: 2827169587167240314, guid: 13f826b7916664c16919e8189117988b, type: 3}
+    Separation: 2
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 1
+    GatePresets:
+    - Sign: +
+      GateRange:
+        min: -3
+        max: 3
+      Step: 0.5
+      NoZero: 1
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Gate Health
+    Prefab: {fileID: 4440737084169318340, guid: 58313e723ea7c436181011cd48402026, type: 3}
+    Separation: 2
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 1
+    GatePresets:
+    - Sign: +
+      GateRange:
+        min: -20
+        max: 20
+      Step: 5
+      NoZero: 1
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Barrel FireRate
+    Prefab: {fileID: 2227675143948532192, guid: 9f11d06ec24374790b4bf6e6ed8a946f, type: 3}
+    Separation: 2
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 2.55, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1.5
+    AsAGate: 1
+    GatePresets:
+    - Sign: +
+      GateRange:
+        min: 5
+        max: 50
+      Step: 1
+      NoZero: 1
+    UseGateOutputText: 1
+    OutputSign: +
+    OutputRange:
+      min: -3
+      max: 3
+    OutputStep: 1
+    OutputNoZero: 1
+  - Name: Barrel FireRange
+    Prefab: {fileID: 741329820127421013, guid: be44031c489b64a1b9be23adf27343c0, type: 3}
+    Separation: 2
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 2.55, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1.5
+    AsAGate: 1
+    GatePresets:
+    - Sign: +
+      GateRange:
+        min: 5
+        max: 50
+      Step: 0
+      NoZero: 0
+    UseGateOutputText: 1
+    OutputSign: +
+    OutputRange:
+      min: -3
+      max: 3
+    OutputStep: 1
+    OutputNoZero: 1
+  - Name: Barrel
+    Prefab: {fileID: 1132145541452459387, guid: 2ae5fa5dcff6c4e82b2d3bbe7dd64c4e, type: 3}
+    Separation: 2
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0.84, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 1
+    GatePresets:
+    - Sign: +
+      GateRange:
+        min: 5
+        max: 50
+      Step: 0
+      NoZero: 1
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: Gems Row
+    Prefab: {fileID: 365819190789010607, guid: be1f1cb9743b04315a3b53b18c30e96f, type: 3}
+    Separation: 1
+    ExtraStepZ: -7
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  - Name: GemsLine Random
+    Prefab: {fileID: 365819190789010607, guid: a3ef84bb6c2894a5fa83efd2601f3102, type: 3}
+    Separation: 1
+    ExtraStepZ: 0
+    SpawnOffset: {x: 0, y: 0, z: 0}
+    IgnoreFirstLines: 0
+    Chance: 1
+    AsAGate: 0
+    GatePresets: []
+    UseGateOutputText: 0
+    OutputSign: 
+    OutputRange:
+      min: 0
+      max: 0
+    OutputStep: 0
+    OutputNoZero: 0
+  EndlinePrefab: {fileID: 2780684905114753743, guid: d7b410c2ed5e346a8b495a10dab6e383, type: 3}
+  OffsetFromStart: {x: 0, y: 0, z: 142}
+  HaveBonus: 0
+  RepeatedPrefab: {fileID: 0}
+  Amount: 5
+  OffsetPerStep: {x: 0, y: 0, z: 5}
+  OffsetFromEndpoint: {x: 0, y: 0, z: 0}
+  IsGate: 0
+  GateSign: x
+  GateStartValue: 1
+  GateJumpPerStep: 0.2
+  OutputSign: x
+  OutputStartValue: 1
+  OutputJumpPerStep: 0.2
+  TextStartValue: 1
+  TextJumpPerStep: 0.2
+  TextNameInStepChilds: []
+  TargetColorMaterialLerpName: 
+  MaterialsLerp: []
+  SaveAsPrefab: 1
+  FolderPath: Assets/Most In One/Runner/Scenes/Levels/Pistol
+  BaseLevelName: Level
+  generateButton:
+    _dummy: 0
