@@ -24,7 +24,6 @@ namespace RunnerPac.EpicRoadRunner
 
         [SerializeField] int startCountdownSeconds = 3;
         [SerializeField] int nextLevelCountdownSeconds = 5;
-        [SerializeField] float endScreenHoldSeconds = 1.5f;
 
         [SerializeField] float enemyClearCheckInterval = 0.5f;
 
@@ -54,17 +53,26 @@ namespace RunnerPac.EpicRoadRunner
 
         IEnumerator BeginRun()
         {
-            int seconds = hasStartedOnce ? nextLevelCountdownSeconds : startCountdownSeconds;
-            hasStartedOnce = true;
-            yield return Countdown(seconds);
+            // A level-transition reload already ran its countdown on the end
+            // screen before reloading - only the very first Start() this play
+            // session needs its own countdown here.
+            if (!hasStartedOnce)
+            {
+                hasStartedOnce = true;
+                yield return Countdown(startCountdownSeconds, "Starting in {0}");
+            }
             character.Activate();
             ActivateLevelContent();
 
-            // Barrels are drive-through pickups (no MOST_Damage - shooting them
-            // is cosmetic, they don't die). Only enemies carry MOST_Damage, so
-            // "nothing left to shoot" means every enemy's Health has hit zero.
-            // Guarded on there having been at least one enemy to begin with, so
-            // an enemy-free level doesn't instantly "end" before it's played.
+            // Enemies-only, deliberately: the level's content scrolls toward a
+            // stationary character (see ActivateLevelContent), so whatever was
+            // placed farthest out takes real time to arrive regardless of what
+            // we're waiting on. Requiring every pickup too (not just enemies)
+            // was tried and reverted - it meant waiting for the single
+            // farthest-out barrel to scroll all the way in, which reads as a
+            // dead "empty road" stretch. Ending on enemies alone means some
+            // distant barrels may occasionally get skipped, but that's the
+            // better trade-off for pacing.
             var enemies = _currentLevel.GetComponentsInChildren<MOST_Damage>(includeInactive: true);
             if (enemies.Length > 0)
                 StartCoroutine(WatchForAllEnemiesDefeated(enemies));
@@ -74,6 +82,13 @@ namespace RunnerPac.EpicRoadRunner
         {
             while (!_ended)
             {
+                // Wait a beat before every check, including the first - a
+                // freshly-Instantiated MOST_Damage hasn't run its own Start()
+                // yet (that's what sets Health to MaxHealth; the field itself
+                // defaults to 0), so checking on the same frame the level
+                // spawns would wrongly read every enemy as already dead.
+                yield return new WaitForSeconds(enemyClearCheckInterval);
+
                 bool anyAlive = false;
                 foreach (var enemy in enemies)
                 {
@@ -84,7 +99,6 @@ namespace RunnerPac.EpicRoadRunner
                     TriggerEnd(winUI);
                     yield break;
                 }
-                yield return new WaitForSeconds(enemyClearCheckInterval);
             }
         }
 
@@ -111,18 +125,20 @@ namespace RunnerPac.EpicRoadRunner
 
         IEnumerator EndOfLevel(GameObject panel)
         {
+            // Recap stays visible the whole time - countdown appears
+            // alongside it, not over it, so it's readable while counting down.
             panel.SetActive(true);
-            yield return new WaitForSeconds(endScreenHoldSeconds);
+            yield return Countdown(nextLevelCountdownSeconds, "Next level in {0}");
             panel.SetActive(false);
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
-        IEnumerator Countdown(int seconds)
+        IEnumerator Countdown(int seconds, string format)
         {
             countdownRoot.SetActive(true);
             for (int i = seconds; i > 0; i--)
             {
-                countdownText.text = i.ToString();
+                countdownText.text = string.Format(format, i);
                 yield return new WaitForSeconds(1f);
             }
             countdownRoot.SetActive(false);
