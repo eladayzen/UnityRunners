@@ -128,22 +128,22 @@ MonoBehaviour:
     Chance: 2.5
     AsAGate: 1
     GatePresets:
-    - Sign: x
+    - Sign: +
       GateRange:
-        min: 1
-        max: 3
-      Step: 1
-      NoZero: 1
-    - Sign: "\xF7"
-      GateRange:
-        min: 1
-        max: 3
+        min: 3
+        max: 20
       Step: 1
       NoZero: 1
     - Sign: +
       GateRange:
-        min: -5
-        max: 10
+        min: 3
+        max: 20
+      Step: 1
+      NoZero: 1
+    - Sign: +
+      GateRange:
+        min: 3
+        max: 20
       Step: 1
       NoZero: 1
     UseGateOutputText: 0
@@ -187,7 +187,7 @@ MonoBehaviour:
     - Sign: +
       GateRange:
         min: 5
-        max: 50
+        max: 20
       Step: 1
       NoZero: 1
     UseGateOutputText: 1
