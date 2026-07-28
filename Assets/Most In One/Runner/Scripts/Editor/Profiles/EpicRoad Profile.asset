@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: EpicRoad Profile
   m_EditorClassIdentifier: 
   StartWorldPosition: {x: 0, y: 0, z: -43}
-  RoadPrefab: {fileID: 0}
+  RoadPrefab: {fileID: 8300971376151539402, guid: a3540ee3cd80f467d9af9dd26da3b278, type: 3}
   RepeatTimes: 1
   OffsetBetweenParts: {x: 0, y: 0, z: 10}
   OffsetFromStartZ: 10
@@ -92,8 +92,8 @@ MonoBehaviour:
     Separation: 3
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
-    IgnoreFirstLines: 2
-    Chance: 1
+    IgnoreFirstLines: 8
+    Chance: 0.6
     AsAGate: 0
     GatePresets: []
     UseGateOutputText: 0
@@ -108,8 +108,8 @@ MonoBehaviour:
     Separation: 3
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
-    IgnoreFirstLines: 2
-    Chance: 1
+    IgnoreFirstLines: 8
+    Chance: 0.6
     AsAGate: 0
     GatePresets: []
     UseGateOutputText: 0
@@ -125,7 +125,7 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 1
-    Chance: 1.5
+    Chance: 2.5
     AsAGate: 1
     GatePresets:
     - Sign: x
@@ -213,7 +213,7 @@ MonoBehaviour:
       max: 0
     OutputStep: 0
     OutputNoZero: 0
-  EndlinePrefab: {fileID: 0}
+  EndlinePrefab: {fileID: 2110426315090240533, guid: 00183d5442ea842c2921ad47bdd6d2b4, type: 3}
   OffsetFromStart: {x: 0, y: 0, z: 140}
   HaveBonus: 0
   RepeatedPrefab: {fileID: 0}
