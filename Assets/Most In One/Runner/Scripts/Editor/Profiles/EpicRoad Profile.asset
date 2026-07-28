@@ -125,7 +125,7 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 1
-    Chance: 2.5
+    Chance: 0
     AsAGate: 1
     GatePresets:
     - Sign: +
@@ -186,8 +186,8 @@ MonoBehaviour:
     GatePresets:
     - Sign: +
       GateRange:
-        min: -15
-        max: 25
+        min: 5
+        max: 50
       Step: 1
       NoZero: 1
     UseGateOutputText: 1
