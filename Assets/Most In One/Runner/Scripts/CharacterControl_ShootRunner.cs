@@ -22,6 +22,11 @@ namespace Solo.MOST_IN_ONE
         [ReadOnly, GUIColor("cyan")] public int NumberOfChilds;
         [GUIColor("green"), Min(1)] public int StartAmount = 1;
 
+        [Tooltip("Hard cap on the crowd size. Gate math (especially a Multiply gate on an " +
+            "already-large crowd) is otherwise unbounded and can try to instantiate thousands " +
+            "of prefabs in a single frame, which freezes the game/Editor.")]
+        [GUIColor("red"), Min(1)] public int MaxChilds = 150;
+
         [Tooltip("Rescale factor of the distance inside the circle")]
         [Range(0f, 3f)] public float DistanceFactor = .15f;
 
@@ -189,6 +194,7 @@ namespace Solo.MOST_IN_ONE
 
         void SpawnChilds(int NextNumOfChilds)
         {
+            NextNumOfChilds = Mathf.Min(NextNumOfChilds, MaxChilds); // hard cap - see MaxChilds tooltip
             if (NextNumOfChilds < NumberOfChilds)
             {
                 int val = NumberOfChilds;
@@ -198,10 +204,10 @@ namespace Solo.MOST_IN_ONE
             else
             {
                 for (int i = NumberOfChilds; i < NextNumOfChilds; i++)
-                {
                     Instantiate(ChildPrefabs[CurrentLevel - 1], ChildHolder.position, Quaternion.identity, ChildHolder);
-                    UpdateIdlePositions();
-                }
+                // Moved out of the loop above: it repositions every existing child, so calling it
+                // once per newly-spawned child made a large gate an O(n^2) frame spike.
+                UpdateIdlePositions();
             }
             UpdateChildNumber(); // after spawn update child number 
             UpdateConsitrains(); // after spawn update Road consitrains
