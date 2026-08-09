@@ -18,12 +18,12 @@ MonoBehaviour:
   OffsetBetweenParts: {x: 0, y: 0, z: 10}
   OffsetFromStartZ: 10
   OffsetBeforeEndlineZ: 0
-  Step: {x: 0, y: 0, z: 16}
+  Step: {x: 0, y: 0, z: 14}
   RoadWidth: 24
   Parts:
   - Name: Barrel Start
     Prefab: {fileID: 7477219342578069492, guid: 482dae32f20d247e18155d51ff6009d1, type: 3}
-    Separation: 3
+    Separation: 1
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 1.396873, z: 0}
     IgnoreFirstLines: 0
@@ -45,7 +45,7 @@ MonoBehaviour:
     OutputNoZero: 0
   - Name: Barrel Upgrade Start
     Prefab: {fileID: 7530989939288560035, guid: eeed169a296e04f50b33895a5f868181, type: 3}
-    Separation: 3
+    Separation: 1
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 3.096877, z: 0}
     IgnoreFirstLines: 0
@@ -67,11 +67,11 @@ MonoBehaviour:
     OutputNoZero: 1
   - Name: Barrel Upgrade
     Prefab: {fileID: 7530989939288560035, guid: eeed169a296e04f50b33895a5f868181, type: 3}
-    Separation: 3
+    Separation: 2
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 3.096877, z: 0}
     IgnoreFirstLines: 1
-    Chance: 3
+    Chance: 2
     AsAGate: 1
     GatePresets:
     - Sign: +
@@ -89,11 +89,11 @@ MonoBehaviour:
     OutputNoZero: 1
   - Name: Enemy Big
     Prefab: {fileID: 5396879819469048875, guid: 9b7fdf39c2f6d4612a98ca0404b2e7bc, type: 3}
-    Separation: 3
+    Separation: 1
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 2
-    Chance: 1
+    Chance: 2.2
     AsAGate: 0
     GatePresets: []
     UseGateOutputText: 0
@@ -105,11 +105,11 @@ MonoBehaviour:
     OutputNoZero: 0
   - Name: Enemy Crowd
     Prefab: {fileID: 1672938882617609472, guid: eac25545d597f4a19ac8d6546031f029, type: 3}
-    Separation: 3
+    Separation: 1
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 2
-    Chance: 1
+    Chance: 1.8
     AsAGate: 0
     GatePresets: []
     UseGateOutputText: 0
@@ -121,7 +121,7 @@ MonoBehaviour:
     OutputNoZero: 0
   - Name: Gate Children
     Prefab: {fileID: 1881057152929116038, guid: 8e72f4eb3240b48fda4fbc0ba9441834, type: 3}
-    Separation: 3
+    Separation: 2
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 1
@@ -143,7 +143,7 @@ MonoBehaviour:
     OutputNoZero: 0
   - Name: Barrel
     Prefab: {fileID: 7477219342578069492, guid: 482dae32f20d247e18155d51ff6009d1, type: 3}
-    Separation: 3
+    Separation: 2
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 1.396873, z: 0}
     IgnoreFirstLines: 1
@@ -165,7 +165,7 @@ MonoBehaviour:
     OutputNoZero: 0
   - Name: Barrel Children
     Prefab: {fileID: 9150510136155061362, guid: 8912d3c186a0d4ace9987de83ae46cb5, type: 3}
-    Separation: 3
+    Separation: 2
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 2.55, z: 0}
     IgnoreFirstLines: 1
@@ -191,7 +191,7 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 1
-    Chance: 5
+    Chance: 2.5
     AsAGate: 0
     GatePresets: []
     UseGateOutputText: 0
