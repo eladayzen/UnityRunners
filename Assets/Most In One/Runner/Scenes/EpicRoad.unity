@@ -12666,6 +12666,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1477276902795033832, guid: df62b9853194841598d76e7abf4f25cb, type: 3}
+      propertyPath: EndLineTriggerEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1477276902795033832, guid: df62b9853194841598d76e7abf4f25cb, type: 3}
       propertyPath: OnWinEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 150243434}
@@ -12680,6 +12684,46 @@ PrefabInstance:
     - target: {fileID: 1477276902795033832, guid: df62b9853194841598d76e7abf4f25cb, type: 3}
       propertyPath: OnLoseEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnLose
+      objectReference: {fileID: 0}
+    - target: {fileID: 1477276902795033832, guid: df62b9853194841598d76e7abf4f25cb, type: 3}
+      propertyPath: EndLineTriggerEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1477276902795033832, guid: df62b9853194841598d76e7abf4f25cb, type: 3}
+      propertyPath: EndLineTriggerEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1477276902795033832, guid: df62b9853194841598d76e7abf4f25cb, type: 3}
+      propertyPath: EndLineTriggerEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1397730767}
+    - target: {fileID: 1477276902795033832, guid: df62b9853194841598d76e7abf4f25cb, type: 3}
+      propertyPath: EndLineTriggerEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 150243434}
+    - target: {fileID: 1477276902795033832, guid: df62b9853194841598d76e7abf4f25cb, type: 3}
+      propertyPath: EndLineTriggerEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1477276902795033832, guid: df62b9853194841598d76e7abf4f25cb, type: 3}
+      propertyPath: EndLineTriggerEvent.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1477276902795033832, guid: df62b9853194841598d76e7abf4f25cb, type: 3}
+      propertyPath: EndLineTriggerEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Deactivate
+      objectReference: {fileID: 0}
+    - target: {fileID: 1477276902795033832, guid: df62b9853194841598d76e7abf4f25cb, type: 3}
+      propertyPath: EndLineTriggerEvent.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnWin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1477276902795033832, guid: df62b9853194841598d76e7abf4f25cb, type: 3}
+      propertyPath: EndLineTriggerEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Solo.MOST_IN_ONE.CharacterControl_ShootRunner, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1477276902795033832, guid: df62b9853194841598d76e7abf4f25cb, type: 3}
+      propertyPath: EndLineTriggerEvent.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: Solo.MOST_IN_ONE.UniversalGameManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3601819440399461692, guid: df62b9853194841598d76e7abf4f25cb, type: 3}
       propertyPath: ForwardSpeed
