@@ -76,8 +76,8 @@ MonoBehaviour:
     GatePresets:
     - Sign: +
       GateRange:
-        min: 12
-        max: 24
+        min: 10
+        max: 20
       Step: 1
       NoZero: 1
     UseGateOutputText: 1
@@ -93,7 +93,7 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 2
-    Chance: 1.8
+    Chance: 1.7
     AsAGate: 0
     GatePresets: []
     UseGateOutputText: 0
@@ -104,12 +104,12 @@ MonoBehaviour:
     OutputStep: 0
     OutputNoZero: 0
   - Name: Enemy Crowd
-    Prefab: {fileID: 1672938882617609472, guid: eac25545d597f4a19ac8d6546031f029, type: 3}
+    Prefab: {fileID: 6237602881466848036, guid: 32605e62965a641fd895de4dd6cd2c9f, type: 3}
     Separation: 1
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 2
-    Chance: 1.6
+    Chance: 1.5
     AsAGate: 0
     GatePresets: []
     UseGateOutputText: 0
@@ -125,12 +125,12 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 1
-    Chance: 1.5
+    Chance: 2
     AsAGate: 1
     GatePresets:
     - Sign: +
       GateRange:
-        min: -8
+        min: -7
         max: 10
       Step: 1
       NoZero: 1
@@ -152,8 +152,8 @@ MonoBehaviour:
     GatePresets:
     - Sign: +
       GateRange:
-        min: 12
-        max: 24
+        min: 10
+        max: 20
       Step: 1
       NoZero: 1
     UseGateOutputText: 0
@@ -169,13 +169,13 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 2.55, z: 0}
     IgnoreFirstLines: 1
-    Chance: 1.5
+    Chance: 2
     AsAGate: 1
     GatePresets:
     - Sign: +
       GateRange:
-        min: 12
-        max: 24
+        min: 10
+        max: 20
       Step: 1
       NoZero: 1
     UseGateOutputText: 1
@@ -191,7 +191,7 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 1
-    Chance: 2.6
+    Chance: 2.2
     AsAGate: 0
     GatePresets: []
     UseGateOutputText: 0
