@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   databaseKey: BaseKeys
   UseInternalStorage: 0
-  initialized: 0
+  initialized: 1
   entries:
   - rid: 4303637141020999680
   - rid: 4303637240451694594
@@ -39,9 +39,9 @@ MonoBehaviour:
       data:
         DataName: CurrentLevel_Splat
         id: 12
-        value: 0
+        value: 2
         InitialValue: 1
-        HighestValue: 0
+        HighestValue: 2
         EnableMin: 1
         MinValue: 1
         EnableMax: 0
@@ -51,9 +51,9 @@ MonoBehaviour:
       data:
         DataName: 3Road Score
         id: 11
-        value: 0
+        value: 127
         InitialValue: 0
-        HighestValue: 0
+        HighestValue: 710
         EnableMin: 1
         MinValue: 0
         EnableMax: 0
@@ -75,16 +75,16 @@ MonoBehaviour:
       data:
         DataName: Bool Data
         id: 1
-        value: 0
+        value: 1
         InitialValue: 1
     - rid: 4303637240451694595
       type: {class: IntData, ns: Solo.MOST_IN_ONE, asm: Assembly-CSharp}
       data:
         DataName: CurrentLevel_Cubey
         id: 0
-        value: 0
+        value: 4
         InitialValue: 1
-        HighestValue: 0
+        HighestValue: 4
         EnableMin: 1
         MinValue: 1
         EnableMax: 0
@@ -94,9 +94,9 @@ MonoBehaviour:
       data:
         DataName: Dodge Template Score
         id: 2
-        value: 0
+        value: 1
         InitialValue: 0
-        HighestValue: 0
+        HighestValue: 6
         EnableMin: 1
         MinValue: 0
         EnableMax: 0
@@ -106,9 +106,9 @@ MonoBehaviour:
       data:
         DataName: CurrentLevel_BigBrain
         id: 4
-        value: 0
+        value: 3
         InitialValue: 0
-        HighestValue: 0
+        HighestValue: 3
         EnableMin: 1
         MinValue: 1
         EnableMax: 0
@@ -118,9 +118,9 @@ MonoBehaviour:
       data:
         DataName: Currency_Gems
         id: 5
-        value: 0
+        value: 557
         InitialValue: 100
-        HighestValue: 0
+        HighestValue: 557
         EnableMin: 1
         MinValue: 0
         EnableMax: 0
@@ -130,9 +130,9 @@ MonoBehaviour:
       data:
         DataName: CurrentLevel_Count
         id: 6
-        value: 0
+        value: 2
         InitialValue: 0
-        HighestValue: 0
+        HighestValue: 2
         EnableMin: 1
         MinValue: 1
         EnableMax: 0
@@ -142,9 +142,9 @@ MonoBehaviour:
       data:
         DataName: CurrentLevel_Pistol
         id: 7
-        value: 0
+        value: 2
         InitialValue: 1
-        HighestValue: 0
+        HighestValue: 2
         EnableMin: 1
         MinValue: 1
         EnableMax: 0
@@ -154,9 +154,9 @@ MonoBehaviour:
       data:
         DataName: CurrentLevel_EpicRunner
         id: 8
-        value: 0
+        value: 1
         InitialValue: 1
-        HighestValue: 0
+        HighestValue: 14
         EnableMin: 1
         MinValue: 1
         EnableMax: 0
@@ -178,9 +178,9 @@ MonoBehaviour:
       data:
         DataName: Runner Score Multiplyer
         id: 10
-        value: 0
+        value: 0.8
         InitialValue: 0.8
-        HighestValue: 0
+        HighestValue: 3.6000006
         EnableMin: 1
         MinValue: 0.8
         EnableMax: 0
@@ -202,9 +202,9 @@ MonoBehaviour:
       data:
         DataName: CurrentLevel_BlockBlast
         id: 13
-        value: 0
+        value: 1
         InitialValue: 1
-        HighestValue: 0
+        HighestValue: 1
         EnableMin: 1
         MinValue: 1
         EnableMax: 0
