@@ -18,7 +18,7 @@ MonoBehaviour:
   OffsetBetweenParts: {x: 0, y: 0, z: 10}
   OffsetFromStartZ: 10
   OffsetBeforeEndlineZ: 0
-  Step: {x: 0, y: 0, z: 13}
+  Step: {x: 0, y: 0, z: 6}
   RoadWidth: 24
   Parts:
   - Name: Barrel Start
@@ -27,7 +27,7 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 1.396873, z: 0}
     IgnoreFirstLines: 0
-    Chance: 0.1
+    Chance: 0
     AsAGate: 1
     GatePresets:
     - Sign: +
@@ -45,17 +45,17 @@ MonoBehaviour:
     OutputNoZero: 0
   - Name: Barrel Upgrade Start
     Prefab: {fileID: 7530989939288560035, guid: eeed169a296e04f50b33895a5f868181, type: 3}
-    Separation: 1
+    Separation: 2
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 3.096877, z: 0}
     IgnoreFirstLines: 0
-    Chance: 0.2
+    Chance: 0.4
     AsAGate: 1
     GatePresets:
     - Sign: +
       GateRange:
-        min: 3
-        max: 10
+        min: 7
+        max: 15
       Step: 1
       NoZero: 1
     UseGateOutputText: 1
@@ -71,13 +71,13 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 3.096877, z: 0}
     IgnoreFirstLines: 1
-    Chance: 3
+    Chance: 1.6
     AsAGate: 1
     GatePresets:
     - Sign: +
       GateRange:
-        min: 18
-        max: 32
+        min: 7
+        max: 15
       Step: 1
       NoZero: 1
     UseGateOutputText: 1
@@ -93,7 +93,7 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 2
-    Chance: 2.2
+    Chance: 3.2
     AsAGate: 0
     GatePresets: []
     UseGateOutputText: 0
@@ -109,7 +109,7 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 2
-    Chance: 2
+    Chance: 2.6
     AsAGate: 0
     GatePresets: []
     UseGateOutputText: 0
@@ -125,13 +125,13 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 1
-    Chance: 1.5
+    Chance: 3
     AsAGate: 1
     GatePresets:
     - Sign: +
       GateRange:
-        min: -12
-        max: 9
+        min: -17
+        max: 20
       Step: 1
       NoZero: 1
     UseGateOutputText: 0
@@ -147,7 +147,7 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 1.396873, z: 0}
     IgnoreFirstLines: 1
-    Chance: 1
+    Chance: 0
     AsAGate: 1
     GatePresets:
     - Sign: +
@@ -169,13 +169,13 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 2.55, z: 0}
     IgnoreFirstLines: 1
-    Chance: 1.5
+    Chance: 3.4
     AsAGate: 1
     GatePresets:
     - Sign: +
       GateRange:
-        min: 18
-        max: 32
+        min: 7
+        max: 15
       Step: 1
       NoZero: 1
     UseGateOutputText: 1
@@ -191,7 +191,7 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 1
-    Chance: 2.2
+    Chance: 0.5
     AsAGate: 0
     GatePresets: []
     UseGateOutputText: 0
@@ -202,7 +202,7 @@ MonoBehaviour:
     OutputStep: 0
     OutputNoZero: 0
   EndlinePrefab: {fileID: 2723930273756032066, guid: d44234cfc2050467da9ca2ab05b34be4, type: 3}
-  OffsetFromStart: {x: 0, y: 0, z: 156}
+  OffsetFromStart: {x: 0, y: 0, z: 152}
   HaveBonus: 0
   RepeatedPrefab: {fileID: 0}
   Amount: 5
