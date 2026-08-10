@@ -31,11 +31,16 @@ namespace RunnerPac.EpicRoadRunner
         [Tooltip("A random one of these is applied when the level starts.")]
         public Palette[] Palettes = new Palette[0];
 
-        [Tooltip("Material names to tint with the RoadBlocks colour.")]
-        public string RoadBlocksMaterial = "RoadBlocks";
+        // Road tinting is OFF by default, and should stay that way.
+        // A coloured road makes barrels, gates and enemies much harder to pick
+        // out, and the lane blockers share these materials with the road surface,
+        // so they cannot be recoloured independently. The sky carries the theme
+        // instead. Fill these in only if you want to experiment.
+        [Tooltip("Leave EMPTY to keep the road grey (recommended - coloured road hurts readability).")]
+        public string RoadBlocksMaterial = "";
 
-        [Tooltip("Material names to tint with the RoadLines colour.")]
-        public string RoadLinesMaterial = "RoadLines";
+        [Tooltip("Leave EMPTY to keep the lane markings grey.")]
+        public string RoadLinesMaterial = "";
 
         [Tooltip("Log which palette was chosen.")]
         public bool LogChoice = false;
