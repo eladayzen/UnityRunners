@@ -1,8 +1,10 @@
 using UnityEngine;
+using Solo.MOST_IN_ONE;
 
 namespace RunnerPac.EpicRoadRunner
 {
-    // Picks a random colour palette each run so no two races look alike.
+    // Applies a colour palette chosen by level number, so each level has its own
+    // consistent look and replaying a level always looks the same.
     //
     // Deliberately touches only sky, light and road - never the barrels, gates or
     // enemies. Those have to stay instantly readable, and recolouring them would
@@ -28,7 +30,7 @@ namespace RunnerPac.EpicRoadRunner
             public Color RoadLines = Color.white;
         }
 
-        [Tooltip("A random one of these is applied when the level starts.")]
+        [Tooltip("Chosen by level number: level 1 uses the first, level 2 the second, and so on.")]
         public Palette[] Palettes = new Palette[0];
 
         // Road tinting is OFF by default, and should stay that way.
@@ -51,7 +53,22 @@ namespace RunnerPac.EpicRoadRunner
         void Start()
         {
             if (Palettes == null || Palettes.Length == 0) return;
-            Apply(Palettes[Random.Range(0, Palettes.Length)]);
+            Apply(Palettes[PaletteIndexForCurrentLevel()]);
+        }
+
+        // Tied to the level number, not random. A level should look the same every
+        // time you play it - a background that changes on every retry reads as a
+        // glitch rather than variety, and makes levels harder to tell apart.
+        int PaletteIndexForCurrentLevel()
+        {
+            var manager = FindFirstObjectByType<UniversalGameManager>();
+            if (manager != null && manager.DatabaseHolder != null)
+            {
+                var data = manager.DatabaseHolder.Get<IntData>(manager.LevelDataName);
+                if (data != null)
+                    return Mathf.Abs(data.Value - 1) % Palettes.Length;
+            }
+            return 0;
         }
 
         public void Apply(Palette palette)

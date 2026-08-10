@@ -74,28 +74,26 @@ namespace RunnerPac.EpicRoadRunner
             }
         }
 
+        // Enemies only. Barrels and gates deliberately do NOT hold the level open.
+        //
+        // They used to, and it made the end drag badly: the squad shoots far
+        // ahead, so the last enemy often dies while it is still tens of units
+        // away. Everything between the player and that kill - every barrel still
+        // scrolling in - then had to physically reach the player before the level
+        // would end, which on a long level is many seconds of empty road.
+        //
+        // Leftover barrels are just pickups you chose to skip. Once nothing can
+        // hurt you, the level is over.
         int CountRemaining()
         {
             float playerZ = character ? character.transform.position.z : 0f;
             int remaining = 0;
 
-            // Enemies count wherever they are - once they aggro they chase the
-            // player, so their position is not a reliable "dealt with" signal.
-            // The only exception is one left far behind, see behindCutoff.
             foreach (var enemy in FindObjectsByType<WalkEnemyManager>(FindObjectsSortMode.None))
             {
                 if (!enemy.gameObject.activeInHierarchy) continue;
+                // One left far behind has already been outrun; it cannot stall the level.
                 if (enemy.transform.position.z < playerZ - behindCutoff) continue;
-                remaining++;
-            }
-
-            // Gates/barrels never die - they are either collected or they
-            // scroll past. Either way they stop being "incoming".
-            foreach (var gate in FindObjectsByType<MOST_Gate>(FindObjectsSortMode.None))
-            {
-                if (!gate.gameObject.activeInHierarchy) continue;
-                if (gate.IsCollected) continue;
-                if (gate.transform.position.z <= playerZ + aheadMargin) continue;
                 remaining++;
             }
 
