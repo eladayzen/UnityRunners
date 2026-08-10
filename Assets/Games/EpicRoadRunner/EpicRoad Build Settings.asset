@@ -18,7 +18,7 @@ MonoBehaviour:
     RowSpacing: 8
     TrackLength: 120
     StartClearance: 24
-    EnemyShare: 0.15
+    EnemyShare: 0.3
     MinGifts: 9
     CrowdSize: 6
     BarrelHpStart: 3
@@ -38,13 +38,13 @@ MonoBehaviour:
     RowSpacing: 8
     TrackLength: 135
     StartClearance: 24
-    EnemyShare: 0.2
+    EnemyShare: 0.3
     MinGifts: 10
     CrowdSize: 6
     BarrelHpStart: 3
     BarrelHpEnd: 13
-    GateMin: -4
-    GateMax: 3
+    GateMin: -50
+    GateMax: -20
     GatesRemoved: 0
     GatesToEnemies: 0.2
     BarrelsToEnemies: 0.2
@@ -58,19 +58,19 @@ MonoBehaviour:
     RowSpacing: 7.5
     TrackLength: 145
     StartClearance: 24
-    EnemyShare: 0.25
-    MinGifts: 11
+    EnemyShare: 0.34
+    MinGifts: 16
     CrowdSize: 12
     BarrelHpStart: 4
     BarrelHpEnd: 16
-    GateMin: -6
-    GateMax: 3
+    GateMin: -50
+    GateMax: -20
     GatesRemoved: 0.7
     GatesToEnemies: 0
     BarrelsToEnemies: 0
-    SurgeStart: 0.5
+    SurgeStart: 0.45
     SurgeSpacingRows: 0.7
-    GearUpShare: 0.25
+    GearUpShare: 0.18
     MaxGapRows: 1.6
     EnemyClearRows: 1.15
   - Label: L4
@@ -78,19 +78,19 @@ MonoBehaviour:
     RowSpacing: 7.5
     TrackLength: 155
     StartClearance: 24
-    EnemyShare: 0.26
-    MinGifts: 12
+    EnemyShare: 0.36
+    MinGifts: 18
     CrowdSize: 12
     BarrelHpStart: 4
     BarrelHpEnd: 20
-    GateMin: -8
-    GateMax: 2
+    GateMin: -50
+    GateMax: -20
     GatesRemoved: 0.7
     GatesToEnemies: 0
     BarrelsToEnemies: 0
-    SurgeStart: 0.5
+    SurgeStart: 0.45
     SurgeSpacingRows: 0.7
-    GearUpShare: 0.22
+    GearUpShare: 0.16
     MaxGapRows: 1.6
     EnemyClearRows: 1.15
   - Label: L5
@@ -98,19 +98,19 @@ MonoBehaviour:
     RowSpacing: 7
     TrackLength: 165
     StartClearance: 24
-    EnemyShare: 0.27
-    MinGifts: 12
+    EnemyShare: 0.38
+    MinGifts: 20
     CrowdSize: 12
     BarrelHpStart: 5
     BarrelHpEnd: 24
-    GateMin: -10
-    GateMax: 2
+    GateMin: -50
+    GateMax: -20
     GatesRemoved: 0.7
     GatesToEnemies: 0
     BarrelsToEnemies: 0
-    SurgeStart: 0
-    SurgeSpacingRows: 1
-    GearUpShare: 0.2
+    SurgeStart: 0.55
+    SurgeSpacingRows: 0.8
+    GearUpShare: 0.14
     MaxGapRows: 1.6
     EnemyClearRows: 1.15
   - Label: L6
@@ -118,19 +118,19 @@ MonoBehaviour:
     RowSpacing: 7
     TrackLength: 175
     StartClearance: 24
-    EnemyShare: 0.28
-    MinGifts: 13
+    EnemyShare: 0.4
+    MinGifts: 22
     CrowdSize: 12
     BarrelHpStart: 5
     BarrelHpEnd: 28
-    GateMin: -13
-    GateMax: 2
+    GateMin: -50
+    GateMax: -20
     GatesRemoved: 0.7
     GatesToEnemies: 0
     BarrelsToEnemies: 0
-    SurgeStart: 0
-    SurgeSpacingRows: 1
-    GearUpShare: 0.18
+    SurgeStart: 0.52
+    SurgeSpacingRows: 0.8
+    GearUpShare: 0.12
     MaxGapRows: 1.6
     EnemyClearRows: 1.15
   - Label: L7
@@ -138,19 +138,19 @@ MonoBehaviour:
     RowSpacing: 6.5
     TrackLength: 185
     StartClearance: 24
-    EnemyShare: 0.29
-    MinGifts: 13
+    EnemyShare: 0.42
+    MinGifts: 24
     CrowdSize: 20
     BarrelHpStart: 6
     BarrelHpEnd: 33
-    GateMin: -16
-    GateMax: 2
+    GateMin: -50
+    GateMax: -20
     GatesRemoved: 0.7
     GatesToEnemies: 0
     BarrelsToEnemies: 0
-    SurgeStart: 0
-    SurgeSpacingRows: 1
-    GearUpShare: 0.16
+    SurgeStart: 0.5
+    SurgeSpacingRows: 0.75
+    GearUpShare: 0.1
     MaxGapRows: 1.6
     EnemyClearRows: 1.15
   - Label: L8
@@ -158,19 +158,19 @@ MonoBehaviour:
     RowSpacing: 6.5
     TrackLength: 195
     StartClearance: 24
-    EnemyShare: 0.3
-    MinGifts: 14
+    EnemyShare: 0.44
+    MinGifts: 26
     CrowdSize: 20
     BarrelHpStart: 6
     BarrelHpEnd: 38
-    GateMin: -19
-    GateMax: 2
+    GateMin: -50
+    GateMax: -20
     GatesRemoved: 0.7
     GatesToEnemies: 0
     BarrelsToEnemies: 0
-    SurgeStart: 0
-    SurgeSpacingRows: 1
-    GearUpShare: 0.15
+    SurgeStart: 0.48
+    SurgeSpacingRows: 0.7
+    GearUpShare: 0.1
     MaxGapRows: 1.6
     EnemyClearRows: 1.15
   OutputFolder: Assets/Games/EpicRoadRunner/Levels
