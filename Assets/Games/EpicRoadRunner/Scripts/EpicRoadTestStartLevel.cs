@@ -16,7 +16,7 @@ namespace RunnerPac.EpicRoadRunner
     [DefaultExecutionOrder(-1000)]
     public class EpicRoadTestStartLevel : MonoBehaviour
     {
-        [Tooltip("0 = off (use the saved progress). 1+ = always start on that level.")]
+        [Tooltip("0 = off (use the saved progress). 1+ = jump to that level when you press Play.")]
         [Min(0)] public int StartAtLevel = 0;
 
         [Tooltip("Also write the value to disk. Leave off so testing does not " +
@@ -25,19 +25,31 @@ namespace RunnerPac.EpicRoadRunner
 
         [SerializeField] UniversalGameManager manager;
 
+        // Applied ONCE per play session, not per scene load. Winning reloads the
+        // scene, so re-applying every Awake would force the same level forever
+        // and progression could never advance past it.
+        static bool _applied;
+
+#if UNITY_EDITOR
+        [UnityEditor.InitializeOnEnterPlayMode]
+        static void ResetOnEnterPlayMode() => _applied = false;
+#endif
+
         void Awake()
         {
-            if (StartAtLevel <= 0) return;
+            if (StartAtLevel <= 0 || _applied) return;
             if (manager == null) manager = FindFirstObjectByType<UniversalGameManager>();
             if (manager == null || manager.DatabaseHolder == null) return;
 
             var data = manager.DatabaseHolder.Get<IntData>(manager.LevelDataName);
             if (data == null) return;
 
+            _applied = true;
             data.Value = StartAtLevel;
             if (PersistToSave) manager.DatabaseHolder.SaveToJson();
 
-            Debug.Log($"[EpicRoadTestStartLevel] Forcing start at level {StartAtLevel}.");
+            Debug.Log($"[EpicRoadTestStartLevel] Starting at level {StartAtLevel} " +
+                      "(applies once; progression continues normally from here).");
         }
     }
 }
