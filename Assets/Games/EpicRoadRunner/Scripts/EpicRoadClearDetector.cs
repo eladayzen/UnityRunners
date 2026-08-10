@@ -31,8 +31,9 @@ namespace RunnerPac.EpicRoadRunner
         [SerializeField] UniversalGameManager manager;
         [SerializeField] CharacterControl_ShootRunner character;
 
-        [Tooltip("Seconds between clear checks.")]
-        [SerializeField] float checkInterval = 0.4f;
+        [Tooltip("Seconds between clear checks. Kept short so the level ends promptly " +
+                 "once the last enemy dies rather than lingering on empty road.")]
+        [SerializeField] float checkInterval = 0.2f;
 
         [Tooltip("Delay after the run starts before checking at all.")]
         [SerializeField] float graceSeconds = 1.5f;
