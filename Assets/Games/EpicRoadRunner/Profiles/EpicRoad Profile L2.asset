@@ -18,7 +18,7 @@ MonoBehaviour:
   OffsetBetweenParts: {x: 0, y: 0, z: 10}
   OffsetFromStartZ: 24
   OffsetBeforeEndlineZ: 0
-  Step: {x: 0, y: 0, z: 10}
+  Step: {x: 0, y: 0, z: 8}
   RoadWidth: 24
   Parts:
   - Name: Barrel Start
@@ -115,7 +115,7 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 2
-    Chance: 1.43
+    Chance: 0.5
     AsAGate: 0
     GatePresets: []
     UseGateOutputText: 0
@@ -131,7 +131,7 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 2
-    Chance: 1.17
+    Chance: 0.5
     AsAGate: 0
     GatePresets: []
     UseGateOutputText: 0
@@ -147,7 +147,7 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 2
-    Chance: 2.8
+    Chance: 0.4
     AsAGate: 0
     GatePresets: []
     UseGateOutputText: 0
@@ -273,7 +273,7 @@ MonoBehaviour:
     ExtraStepZ: 0
     SpawnOffset: {x: 0, y: 0, z: 0}
     IgnoreFirstLines: 1
-    Chance: 0.7
+    Chance: 0.3
     AsAGate: 0
     GatePresets: []
     UseGateOutputText: 0
@@ -284,7 +284,7 @@ MonoBehaviour:
     OutputStep: 0
     OutputNoZero: 0
   EndlinePrefab: {fileID: 2723930273756032066, guid: d44234cfc2050467da9ca2ab05b34be4, type: 3}
-  OffsetFromStart: {x: 0, y: 0, z: 145}
+  OffsetFromStart: {x: 0, y: 0, z: 135}
   HaveBonus: 0
   RepeatedPrefab: {fileID: 0}
   Amount: 5

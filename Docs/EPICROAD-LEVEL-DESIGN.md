@@ -60,6 +60,17 @@ Two failure modes to avoid when enforcing this, both hit in practice:
   back to the original position re-creates the violation; pick the position with the
   largest clearance instead, so the result degrades gracefully.
 
+## Where to change all of this
+
+`Assets/Games/EpicRoadRunner/EpicRoad Build Settings.asset`
+
+Select it in Unity and every knob is on one screen, per level: row spacing, track
+length, run-up, enemy share, minimum gifts, crowd size, barrel cost ramp, gate value
+range, max gap, enemy clearance. Press **Build All Levels** to re-roll everything,
+apply the rules below, write the prefabs and point `UniversalGameManager` at them.
+
+Tool code: `Assets/Games/EpicRoadRunner/Editor/EpicRoadLevelBuilder.cs`.
+
 ## Implementation: a post-generation design pass
 
 New editor script, run after `GenerateLevel()` for each level, operating on the placed

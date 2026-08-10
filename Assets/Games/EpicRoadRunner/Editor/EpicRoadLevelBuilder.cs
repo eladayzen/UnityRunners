@@ -1,0 +1,405 @@
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEditor.SceneManagement;
+using Solo.MOST_IN_ONE;
+
+namespace RunnerPac.EpicRoadRunner.EditorTools
+{
+    // Builds every EpicRoad level from EpicRoadBuildSettings and wires the results
+    // into UniversalGameManager.
+    //
+    // The MOST generator rolls each row independently, so it cannot express mix,
+    // pacing or ordering. This runs it, then rewrites the result:
+    //
+    //   1. barrel cost ramps along the track      (cheap early, expensive late)
+    //   2. charge gates moved behind a barrel     (barrel eats your fire first)
+    //   3. enemy share topped up to target        (fights, not just pickups)
+    //   4. no empty stretch longer than MaxGapRows
+    //   5. enemies kept clear of barrels/gates    (time to react)
+    //   6. a final enemy, then the finish line
+    [CustomEditor(typeof(EpicRoadBuildSettings))]
+    public class EpicRoadBuildSettingsEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            DrawDefaultInspector();
+            var settings = (EpicRoadBuildSettings)target;
+
+            EditorGUILayout.Space();
+            if (GUILayout.Button("Build All Levels", GUILayout.Height(30)))
+                EpicRoadLevelBuilder.BuildAll(settings);
+
+            EditorGUILayout.Space();
+            EditorGUILayout.HelpBox(
+                "Build All Levels re-rolls every level with the values above, applies the " +
+                "design rules, writes the prefabs and points UniversalGameManager at them.\n\n" +
+                "Seconds per level = Track Length / 2.5.",
+                MessageType.Info);
+        }
+    }
+
+    public static class EpicRoadLevelBuilder
+    {
+        public static void BuildAll(EpicRoadBuildSettings settings)
+        {
+            if (EditorApplication.isPlaying)
+            {
+                EditorUtility.DisplayDialog("EpicRoad", "Exit Play mode before building levels.", "OK");
+                return;
+            }
+
+            var scene = EditorSceneManager.GetActiveScene();
+            var report = new System.Text.StringBuilder();
+            var built = new List<GameObject>();
+
+            ClearExistingLevelRoots();
+
+            for (int i = 0; i < settings.Levels.Length; i++)
+            {
+                var spec = settings.Levels[i];
+                if (spec == null || spec.Profile == null)
+                {
+                    Debug.LogError($"[EpicRoad] Level {i + 1} has no profile assigned.");
+                    return;
+                }
+
+                var prefab = BuildOne(settings, spec, i + 1, report);
+                if (prefab == null) return;
+                built.Add(prefab);
+            }
+
+            WireIntoGameManager(built);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+
+            Debug.Log("[EpicRoad] Build complete.\n" + report);
+        }
+
+        static void ClearExistingLevelRoots()
+        {
+            foreach (var go in EditorSceneManager.GetActiveScene().GetRootGameObjects())
+                if (System.Text.RegularExpressions.Regex.IsMatch(go.name, @"^L\d+ #"))
+                    Object.DestroyImmediate(go);
+        }
+
+        static GameObject BuildOne(EpicRoadBuildSettings settings, EpicRoadBuildSettings.LevelSpec spec,
+                                   int levelNumber, System.Text.StringBuilder report)
+        {
+            string prefix = "L" + levelNumber + " #";
+            foreach (var guid in AssetDatabase.FindAssets("t:Prefab", new[] { settings.OutputFolder }))
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                if (System.IO.Path.GetFileName(path).StartsWith(prefix))
+                    AssetDatabase.DeleteAsset(path);
+            }
+
+            ApplySpecToProfile(spec, settings.OutputFolder, "L" + levelNumber);
+
+            GameObject best = null;
+            string bestPath = null;
+            int bestGifts = -1;
+
+            for (int roll = 0; roll < settings.RollsPerLevel; roll++)
+            {
+                var before = new HashSet<GameObject>(EditorSceneManager.GetActiveScene().GetRootGameObjects());
+                spec.Profile.GetType().GetMethod("GenerateLevel").Invoke(spec.Profile, null);
+
+                GameObject rolled = null;
+                foreach (var go in EditorSceneManager.GetActiveScene().GetRootGameObjects())
+                    if (!before.Contains(go)) { rolled = go; break; }
+                if (rolled == null) break;
+
+                string rolledPath = settings.OutputFolder + "/" + rolled.name + ".prefab";
+                int gifts = rolled.GetComponentsInChildren<MOST_Gate>(true).Length;
+
+                if (gifts > bestGifts)
+                {
+                    if (best != null) { Object.DestroyImmediate(best); AssetDatabase.DeleteAsset(bestPath); }
+                    best = rolled; bestPath = rolledPath; bestGifts = gifts;
+                }
+                else { Object.DestroyImmediate(rolled); AssetDatabase.DeleteAsset(rolledPath); }
+
+                if (bestGifts >= spec.MinGifts) break;
+            }
+
+            if (best == null)
+            {
+                Debug.LogError($"[EpicRoad] Level {levelNumber} produced no layout.");
+                return null;
+            }
+
+            var stats = ApplyDesignRules(best, spec);
+            PrefabUtility.ApplyPrefabInstance(best, InteractionMode.AutomatedAction);
+            var asset = AssetDatabase.LoadAssetAtPath<GameObject>(bestPath);
+            Object.DestroyImmediate(best);
+
+            report.AppendLine(
+                $"L{levelNumber}: {stats.enemyProps} enemy encounters / {stats.totalEncounters} total " +
+                $"({stats.enemySharePct}%), {stats.gifts} gifts, " +
+                $"barrels {spec.BarrelHpStart:0}->{spec.BarrelHpEnd:0}, " +
+                $"gaps filled {stats.gapsFilled}, enemies nudged {stats.enemiesSpaced}, " +
+                $"{spec.TrackLength / 2.5f:0}s");
+
+            return asset;
+        }
+
+        static void ApplySpecToProfile(EpicRoadBuildSettings.LevelSpec spec, string outputFolder, string baseName)
+        {
+            var so = new SerializedObject(spec.Profile);
+            so.FindProperty("Step").vector3Value = new Vector3(0f, 0f, spec.RowSpacing);
+            so.FindProperty("OffsetFromStart").vector3Value = new Vector3(0f, 0f, spec.TrackLength);
+            so.FindProperty("OffsetFromStartZ").floatValue = spec.StartClearance;
+            so.FindProperty("FolderPath").stringValue = outputFolder;
+            so.FindProperty("BaseLevelName").stringValue = baseName;
+
+            var crowd = LoadCrowdPrefab(spec.CrowdSize);
+            var parts = so.FindProperty("Parts");
+            for (int i = 0; i < parts.arraySize; i++)
+            {
+                var part = parts.GetArrayElementAtIndex(i);
+                string name = part.FindPropertyRelative("Name").stringValue;
+
+                if (name.StartsWith("Enemy Crowd") && crowd != null)
+                    part.FindPropertyRelative("Prefab").objectReferenceValue = crowd;
+
+                if (name.StartsWith("Gate Children"))
+                {
+                    var presets = part.FindPropertyRelative("GatePresets");
+                    for (int g = 0; g < presets.arraySize; g++)
+                    {
+                        var range = presets.GetArrayElementAtIndex(g).FindPropertyRelative("GateRange");
+                        range.FindPropertyRelative("min").floatValue = spec.GateMin;
+                        range.FindPropertyRelative("max").floatValue = spec.GateMax;
+                    }
+                }
+            }
+
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(spec.Profile);
+        }
+
+        static GameObject LoadCrowdPrefab(int size)
+        {
+            string path =
+                size <= 6 ? "Assets/Games/EpicRoadRunner/Prefabs/Enemies Crowd Small.prefab" :
+                size <= 12 ? "Assets/Games/EpicRoadRunner/Prefabs/Enemies Crowd Medium.prefab" :
+                             "Assets/Most In One/Runner/Prefabs/Enemies/Enemies Crowd.prefab";
+            return AssetDatabase.LoadAssetAtPath<GameObject>(path);
+        }
+
+        struct BuildStats
+        {
+            public int enemyProps, totalEncounters, enemySharePct, gifts, gapsFilled, enemiesSpaced;
+        }
+
+        static BuildStats ApplyDesignRules(GameObject root, EpicRoadBuildSettings.LevelSpec spec)
+        {
+            float step = spec.RowSpacing;
+            float minClear = step * spec.EnemyClearRows;
+            float maxGap = step * spec.MaxGapRows;
+            var crowd = LoadCrowdPrefab(spec.CrowdSize);
+
+            var props = new List<Transform>();
+            Transform endline = null;
+            for (int i = 0; i < root.transform.childCount; i++)
+            {
+                var child = root.transform.GetChild(i);
+                if (child.name == "Endline") { endline = child; continue; }
+                if (child.name.Contains("Empty")) continue;
+                props.Add(child);
+            }
+
+            // 1. Barrel cost ramps with distance.
+            float minZ = float.MaxValue, maxZ = float.MinValue;
+            foreach (var p in props) { minZ = Mathf.Min(minZ, p.position.z); maxZ = Mathf.Max(maxZ, p.position.z); }
+            float span = Mathf.Max(1f, maxZ - minZ);
+
+            foreach (var p in props)
+            {
+                if (p.name.Contains("Gate Children")) continue;
+                var gate = p.GetComponentInChildren<MOST_Gate>(true);
+                if (gate == null) continue;
+                float t = Mathf.Clamp01((p.position.z - minZ) / span);
+                float hp = Mathf.Max(2f, Mathf.Round(Mathf.Lerp(spec.BarrelHpStart, spec.BarrelHpEnd, t) * Random.Range(0.85f, 1.15f)));
+                gate.SetGateValue(MOST_Gate.GateOperator.Add, hp);
+            }
+
+            // 2. Charge gates hide behind a barrel, so the barrel absorbs your fire.
+            var barrels = props.FindAll(p => p.name.Contains("Barrel"));
+            foreach (var p in props)
+            {
+                if (!p.name.Contains("Gate Children") || barrels.Count == 0) continue;
+
+                bool shielded = false;
+                foreach (var b in barrels)
+                {
+                    float dz = p.position.z - b.position.z;
+                    if (dz > 1f && dz < step * 2.2f && Mathf.Abs(b.position.x - p.position.x) < 1f) { shielded = true; break; }
+                }
+                if (shielded) continue;
+
+                Transform nearest = null; float nearestD = float.MaxValue;
+                foreach (var b in barrels)
+                {
+                    float d = Mathf.Abs(b.position.z - p.position.z);
+                    if (d < nearestD) { nearestD = d; nearest = b; }
+                }
+                if (nearest != null)
+                    p.position = new Vector3(nearest.position.x, p.position.y, nearest.position.z + step * 0.85f);
+            }
+
+            // 3. Top the enemy share up to target by converting surplus barrels.
+            var enemies = props.FindAll(p => p.GetComponentInChildren<WalkEnemyManager>(true) != null);
+            int wanted = Mathf.RoundToInt(props.Count * spec.EnemyShare);
+            int gapsFilled = 0;
+
+            if (crowd != null && enemies.Count < wanted)
+            {
+                var convertible = props.FindAll(p =>
+                    p.name.Contains("Barrel") && !p.name.Contains("Start") &&
+                    p.GetComponentInChildren<WalkEnemyManager>(true) == null);
+
+                // Convert the ones furthest from other enemies, so the level does not
+                // end up front- or back-loaded.
+                convertible.Sort((a, b) => NearestEnemyDistance(b, enemies).CompareTo(NearestEnemyDistance(a, enemies)));
+
+                int convert = Mathf.Min(wanted - enemies.Count, convertible.Count);
+                for (int i = 0; i < convert; i++)
+                {
+                    var victim = convertible[i];
+                    var spawned = (GameObject)PrefabUtility.InstantiatePrefab(crowd);
+                    spawned.transform.SetParent(root.transform, true);
+                    spawned.transform.position = victim.position;
+                    spawned.name = "Obj_Enemy Converted";
+                    props.Remove(victim);
+                    barrels.Remove(victim);
+                    Object.DestroyImmediate(victim.gameObject);
+                    props.Add(spawned.transform);
+                    enemies.Add(spawned.transform);
+                }
+            }
+
+            // 4. No dead stretches: drop an enemy into any gap that is too long.
+            props.Sort((a, b) => a.position.z.CompareTo(b.position.z));
+            if (crowd != null && props.Count > 0)
+            {
+                var inserts = new List<float>();
+                for (int i = 0; i < props.Count - 1; i++)
+                {
+                    float gap = props[i + 1].position.z - props[i].position.z;
+                    if (gap <= maxGap) continue;
+                    int pieces = Mathf.FloorToInt(gap / maxGap);
+                    for (int k = 1; k <= pieces; k++)
+                    {
+                        float z = props[i].position.z + gap * k / (pieces + 1f);
+                        inserts.Add(z);
+                    }
+                }
+                foreach (float z in inserts)
+                {
+                    var filler = (GameObject)PrefabUtility.InstantiatePrefab(crowd);
+                    filler.transform.SetParent(root.transform, true);
+                    filler.transform.position = new Vector3(0f, 0f, z);
+                    filler.name = "Obj_Enemy GapFill";
+                    props.Add(filler.transform);
+                    enemies.Add(filler.transform);
+                    gapsFilled++;
+                }
+            }
+
+            // 5. Enemies need clear air around barrels/gates, without clumping together.
+            var blockers = new List<float>();
+            foreach (var p in props)
+                if (p.GetComponentInChildren<MOST_Gate>(true) != null) blockers.Add(p.position.z);
+
+            enemies.Sort((a, b) => a.position.z.CompareTo(b.position.z));
+            var placed = new List<float>();
+            float enemySeparation = step * 0.8f;
+            int nudged = 0;
+
+            foreach (var enemy in enemies)
+            {
+                float baseZ = enemy.position.z, chosen = baseZ, bestScore = float.MinValue;
+                for (float d = 0f; d <= 40f; d += 1f)
+                {
+                    for (int side = 0; side < 2; side++)
+                    {
+                        float candidate = side == 0 ? baseZ + d : baseZ - d;
+
+                        bool crowded = false;
+                        foreach (float z in placed)
+                            if (Mathf.Abs(z - candidate) < enemySeparation) { crowded = true; break; }
+                        if (crowded) continue;
+
+                        float nearest = float.MaxValue;
+                        foreach (float z in blockers) nearest = Mathf.Min(nearest, Mathf.Abs(z - candidate));
+
+                        // Clamp the reward at minClear so it never drifts further than needed,
+                        // then prefer staying close to where it started.
+                        float score = Mathf.Min(nearest, minClear) * 100f - Mathf.Abs(candidate - baseZ);
+                        if (score > bestScore) { bestScore = score; chosen = candidate; }
+                    }
+                }
+                if (Mathf.Abs(chosen - baseZ) > 0.01f) nudged++;
+                enemy.position = new Vector3(enemy.position.x, enemy.position.y, chosen);
+                placed.Add(chosen);
+            }
+
+            // 6. Always finish on a fight, then the finish line.
+            float lastZ = float.MinValue;
+            foreach (var p in props) lastZ = Mathf.Max(lastZ, p.position.z);
+
+            if (crowd != null)
+            {
+                var finale = (GameObject)PrefabUtility.InstantiatePrefab(crowd);
+                finale.transform.SetParent(root.transform, true);
+                finale.transform.position = new Vector3(0f, 0f, lastZ + Mathf.Max(minClear, step));
+                finale.name = "Obj_FinalEnemy";
+                lastZ = finale.transform.position.z;
+                enemies.Add(finale.transform);
+            }
+
+            if (endline != null)
+                endline.position = new Vector3(endline.position.x, endline.position.y, lastZ + 8f);
+
+            int total = props.Count + 1;
+            return new BuildStats
+            {
+                enemyProps = enemies.Count,
+                totalEncounters = total,
+                enemySharePct = Mathf.RoundToInt(100f * enemies.Count / Mathf.Max(1, total)),
+                gifts = root.GetComponentsInChildren<MOST_Gate>(true).Length,
+                gapsFilled = gapsFilled,
+                enemiesSpaced = nudged
+            };
+        }
+
+        static float NearestEnemyDistance(Transform candidate, List<Transform> enemies)
+        {
+            float nearest = float.MaxValue;
+            foreach (var e in enemies) nearest = Mathf.Min(nearest, Mathf.Abs(e.position.z - candidate.position.z));
+            return nearest == float.MaxValue ? 999f : nearest;
+        }
+
+        static void WireIntoGameManager(List<GameObject> levels)
+        {
+            var manager = Object.FindFirstObjectByType<UniversalGameManager>();
+            if (manager == null) { Debug.LogError("[EpicRoad] No UniversalGameManager in the scene."); return; }
+
+            var so = new SerializedObject(manager);
+            var array = so.FindProperty("LevelsPrefs");
+            array.arraySize = levels.Count;
+            for (int i = 0; i < levels.Count; i++)
+                array.GetArrayElementAtIndex(i).objectReferenceValue = levels[i];
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(manager);
+
+            var data = manager.DatabaseHolder != null
+                ? manager.DatabaseHolder.Get<IntData>(manager.LevelDataName) : null;
+            if (data != null) { data.Value = 1; manager.DatabaseHolder.SaveToJson(); }
+        }
+    }
+}
