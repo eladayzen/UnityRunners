@@ -22,21 +22,61 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
     [CustomEditor(typeof(EpicRoadBuildSettings))]
     public class EpicRoadBuildSettingsEditor : Editor
     {
+        bool _advanced;
+
         public override void OnInspectorGUI()
         {
-            DrawDefaultInspector();
             var settings = (EpicRoadBuildSettings)target;
+            serializedObject.Update();
 
-            EditorGUILayout.Space();
-            if (GUILayout.Button("Build All Levels", GUILayout.Height(30)))
-                EpicRoadLevelBuilder.BuildAll(settings);
-
-            EditorGUILayout.Space();
             EditorGUILayout.HelpBox(
-                "Build All Levels re-rolls every level with the values above, applies the " +
-                "design rules, writes the prefabs and points UniversalGameManager at them.\n\n" +
-                "Seconds per level = Track Length / 2.5.",
-                MessageType.Info);
+                "Edit a level, then press Build All Levels.\n" +
+                "Everything else is under Advanced and rarely needs touching.",
+                MessageType.None);
+            EditorGUILayout.Space();
+
+            var levels = serializedObject.FindProperty("Levels");
+            for (int i = 0; i < levels.arraySize; i++)
+            {
+                var spec = levels.GetArrayElementAtIndex(i);
+                var seconds = spec.FindPropertyRelative("TrackLength");
+                var share = spec.FindPropertyRelative("EnemyShare");
+                var gearUp = spec.FindPropertyRelative("GearUpShare");
+                var hpEnd = spec.FindPropertyRelative("BarrelHpEnd");
+
+                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+                EditorGUILayout.LabelField("Level " + (i + 1), EditorStyles.boldLabel);
+
+                float secs = EditorGUILayout.Slider(
+                    new GUIContent("Length (seconds)", "How long the run takes."),
+                    seconds.floatValue / 2.5f, 20f, 120f);
+                seconds.floatValue = secs * 2.5f;
+
+                EditorGUILayout.Slider(share,
+                    0f, 0.6f, new GUIContent("Fights", "Share of encounters that are enemies."));
+
+                EditorGUILayout.Slider(gearUp,
+                    0f, 0.5f, new GUIContent("Safe opening", "Share of the level with no enemies, so you can gear up."));
+
+                EditorGUILayout.Slider(hpEnd,
+                    5f, 60f, new GUIContent("Toughest barrel", "Bullets the LAST barrel needs. First barrel stays cheap."));
+
+                EditorGUILayout.EndVertical();
+            }
+
+            EditorGUILayout.Space();
+            if (GUILayout.Button("Build All Levels", GUILayout.Height(34)))
+            {
+                serializedObject.ApplyModifiedProperties();
+                EpicRoadLevelBuilder.BuildAll(settings);
+                return;
+            }
+
+            EditorGUILayout.Space();
+            _advanced = EditorGUILayout.Foldout(_advanced, "Advanced", true);
+            if (_advanced) DrawDefaultInspector();
+
+            serializedObject.ApplyModifiedProperties();
         }
     }
 
@@ -251,6 +291,12 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                     p.position = new Vector3(nearest.position.x, p.position.y, nearest.position.z + step * 0.85f);
             }
 
+            // Opening stretch reserved for gearing up - no enemies allowed before this.
+            // Measured against the configured track length, NOT the rolled props' span:
+            // the span at this point excludes the finale enemy and the finish line, so
+            // using it produced a zone only a third of the intended size.
+            float gearUpEnd = minZ + spec.TrackLength * spec.GearUpShare;
+
             // 3. Top the enemy share up to target by converting surplus barrels.
             var enemies = props.FindAll(p => p.GetComponentInChildren<WalkEnemyManager>(true) != null);
             int wanted = Mathf.RoundToInt(props.Count * spec.EnemyShare);
@@ -260,6 +306,7 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
             {
                 var convertible = props.FindAll(p =>
                     p.name.Contains("Barrel") && !p.name.Contains("Start") &&
+                    p.position.z > gearUpEnd &&
                     p.GetComponentInChildren<WalkEnemyManager>(true) == null);
 
                 // Convert the ones furthest from other enemies, so the level does not
@@ -295,6 +342,7 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                     for (int k = 1; k <= pieces; k++)
                     {
                         float z = props[i].position.z + gap * k / (pieces + 1f);
+                        if (z <= gearUpEnd) continue;   // opening stays enemy-free
                         inserts.Add(z);
                     }
                 }
@@ -340,6 +388,7 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                         // Clamp the reward at minClear so it never drifts further than needed,
                         // then prefer staying close to where it started.
                         float score = Mathf.Min(nearest, minClear) * 100f - Mathf.Abs(candidate - baseZ);
+                        if (candidate <= gearUpEnd) score -= 100000f;   // keep the opening enemy-free
                         if (score > bestScore) { bestScore = score; chosen = candidate; }
                     }
                 }

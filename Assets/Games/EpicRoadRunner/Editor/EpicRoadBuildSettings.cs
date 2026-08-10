@@ -58,6 +58,11 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
             public float GateMax = 3f;
 
             [Header("Pacing")]
+            [Tooltip("Opening stretch with no enemies at all, as a share of the level. " +
+                     "0.25 = the first quarter is pickups only, so you can gear up " +
+                     "before anything attacks you.")]
+            [Range(0f, 0.5f)] public float GearUpShare = 0.25f;
+
             [Tooltip("Longest allowed empty stretch, in rows. Anything bigger gets an " +
                      "enemy dropped into it so the level never goes quiet.")]
             [Min(1f)] public float MaxGapRows = 1.6f;
