@@ -47,6 +47,19 @@ pressure the whole way, never a lull.
 Currently ~4.4s of dead time: up to 0.4s detection + `DelayBeforeWinJump` 2s +
 `NextLevelDelay` 2s.
 
+**R6 — Enemies need clear air around gates and barrels.**
+An enemy placed right after a barrel or gate is unreactable: your fire is committed to
+the barrel and there is no distance left to shoot the enemy before it lands on you.
+Minimum separation of ~1.25 rows between any enemy and any gate/barrel.
+
+Two failure modes to avoid when enforcing this, both hit in practice:
+- *Clumping.* Pushing each enemy forward until clear sends them all to the same first
+  clear slot, producing a long empty stretch and then a wall of enemies. Search outward
+  from each enemy's own position instead, and keep enemies apart from each other.
+- *Silent give-up.* Dense levels may have no slot satisfying every constraint. Falling
+  back to the original position re-creates the violation; pick the position with the
+  largest clearance instead, so the result degrades gracefully.
+
 ## Implementation: a post-generation design pass
 
 New editor script, run after `GenerateLevel()` for each level, operating on the placed
