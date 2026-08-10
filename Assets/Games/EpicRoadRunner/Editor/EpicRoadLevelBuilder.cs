@@ -180,7 +180,7 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 $"L{levelNumber}: {stats.enemyProps} enemy encounters / {stats.totalEncounters} total " +
                 $"({stats.enemySharePct}%), {stats.gifts} gifts, " +
                 $"barrels {spec.BarrelHpStart:0}->{spec.BarrelHpEnd:0}, " +
-                $"gaps filled {stats.gapsFilled}, enemies nudged {stats.enemiesSpaced}, " +
+                $"gaps filled {stats.gapsFilled}, swapped {stats.swapped}, surge {stats.surge}, " +
                 $"{spec.TrackLength / 2.5f:0}s");
 
             return asset;
@@ -232,7 +232,7 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
 
         struct BuildStats
         {
-            public int enemyProps, totalEncounters, enemySharePct, gifts, gapsFilled, enemiesSpaced;
+            public int enemyProps, totalEncounters, enemySharePct, gifts, gapsFilled, enemiesSpaced, swapped, surge;
         }
 
         static BuildStats ApplyDesignRules(GameObject root, EpicRoadBuildSettings.LevelSpec spec)
@@ -296,6 +296,17 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
             // the span at this point excludes the finale enemy and the finish line, so
             // using it produced a zone only a third of the intended size.
             float gearUpEnd = minZ + spec.TrackLength * spec.GearUpShare;
+
+            // 3a. Explicit swaps: turn a share of gates and barrels into fights.
+            var enemiesSoFar = props.FindAll(p => p.GetComponentInChildren<WalkEnemyManager>(true) != null);
+            int swapped = 0;
+            if (crowd != null)
+            {
+                swapped += SwapForEnemies(root, props, crowd, gearUpEnd,
+                    p => p.name.Contains("Gate Children"), spec.GatesToEnemies);
+                swapped += SwapForEnemies(root, props, crowd, gearUpEnd,
+                    p => p.name.Contains("Barrel") && !p.name.Contains("Start"), spec.BarrelsToEnemies);
+            }
 
             // 3. Top the enemy share up to target by converting surplus barrels.
             var enemies = props.FindAll(p => p.GetComponentInChildren<WalkEnemyManager>(true) != null);
@@ -370,6 +381,7 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
 
             foreach (var enemy in enemies)
             {
+                if (enemy.name.Contains("Surge")) continue;   // deliberately packed, leave it
                 float baseZ = enemy.position.z, chosen = baseZ, bestScore = float.MinValue;
                 for (float d = 0f; d <= 40f; d += 1f)
                 {
@@ -397,6 +409,29 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 placed.Add(chosen);
             }
 
+            // 5b. Back-half surge: pack the tail of the level with hordes.
+            int surgeAdded = 0;
+            if (crowd != null && spec.SurgeStart > 0f)
+            {
+                float surgeFrom = minZ + spec.TrackLength * spec.SurgeStart;
+                float surgeTo = float.MinValue;
+                foreach (var p in props) surgeTo = Mathf.Max(surgeTo, p.position.z);
+                float gapStep = Mathf.Max(1f, step * spec.SurgeSpacingRows);
+                float[] lanes = { -6f, 0f, 6f };
+                int lane = 0;
+                for (float z = surgeFrom; z <= surgeTo; z += gapStep)
+                {
+                    var horde = (GameObject)PrefabUtility.InstantiatePrefab(crowd);
+                    horde.transform.SetParent(root.transform, true);
+                    horde.transform.position = new Vector3(lanes[lane % lanes.Length], 0f, z);
+                    horde.name = "Obj_Enemy Surge";
+                    props.Add(horde.transform);
+                    enemies.Add(horde.transform);
+                    lane++;
+                    surgeAdded++;
+                }
+            }
+
             // 6. Always finish on a fight, then the finish line.
             float lastZ = float.MinValue;
             foreach (var p in props) lastZ = Mathf.Max(lastZ, p.position.z);
@@ -422,8 +457,35 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 enemySharePct = Mathf.RoundToInt(100f * enemies.Count / Mathf.Max(1, total)),
                 gifts = root.GetComponentsInChildren<MOST_Gate>(true).Length,
                 gapsFilled = gapsFilled,
-                enemiesSpaced = nudged
+                enemiesSpaced = nudged,
+                swapped = swapped,
+                surge = surgeAdded
             };
+        }
+
+        static int SwapForEnemies(GameObject root, List<Transform> props, GameObject crowd,
+                                  float afterZ, System.Predicate<Transform> match, float share)
+        {
+            if (share <= 0f) return 0;
+            var candidates = props.FindAll(p => p.position.z > afterZ && match(p) &&
+                                                p.GetComponentInChildren<WalkEnemyManager>(true) == null);
+            int count = Mathf.FloorToInt(candidates.Count * share);
+            // Spread the swaps evenly instead of taking a run of neighbours.
+            candidates.Sort((a, b) => a.position.z.CompareTo(b.position.z));
+            for (int i = 0; i < count; i++)
+            {
+                var victim = candidates[Mathf.RoundToInt((float)i * (candidates.Count - 1) / Mathf.Max(1, count - 1))];
+                if (victim == null) continue;
+                var spawned = (GameObject)PrefabUtility.InstantiatePrefab(crowd);
+                spawned.transform.SetParent(root.transform, true);
+                spawned.transform.position = victim.position;
+                spawned.name = "Obj_Enemy Swapped";
+                props.Remove(victim);
+                props.Add(spawned.transform);
+                Object.DestroyImmediate(victim.gameObject);
+                candidates[Mathf.RoundToInt((float)i * (candidates.Count - 1) / Mathf.Max(1, count - 1))] = null;
+            }
+            return count;
         }
 
         static float NearestEnemyDistance(Transform candidate, List<Transform> enemies)

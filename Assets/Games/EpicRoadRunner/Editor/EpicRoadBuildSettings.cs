@@ -57,6 +57,23 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
             [Tooltip("Most positive starting value. Keep low - a high start is free troops.")]
             public float GateMax = 3f;
 
+            [Header("Turn pickups into fights")]
+            [Tooltip("Share of charge gates swapped for enemies. Applied after the safe " +
+                     "opening, so the start is untouched.")]
+            [Range(0f, 1f)] public float GatesToEnemies = 0f;
+
+            [Tooltip("Share of barrels swapped for enemies. Applied after the safe opening.")]
+            [Range(0f, 1f)] public float BarrelsToEnemies = 0f;
+
+            [Header("Back-half surge")]
+            [Tooltip("Where a solid wall of enemies begins, as a share of the level. " +
+                     "0 = off. 0.5 = the whole second half is packed with hordes. " +
+                     "Adds no pickups, only enemies.")]
+            [Range(0f, 1f)] public float SurgeStart = 0f;
+
+            [Tooltip("Rows between surge enemies. 1 = an enemy every row.")]
+            [Min(0.5f)] public float SurgeSpacingRows = 1f;
+
             [Header("Pacing")]
             [Tooltip("Opening stretch with no enemies at all, as a share of the level. " +
                      "0.25 = the first quarter is pickups only, so you can gear up " +
