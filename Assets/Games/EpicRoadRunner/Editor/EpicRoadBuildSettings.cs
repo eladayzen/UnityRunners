@@ -58,6 +58,10 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
             public float GateMax = 3f;
 
             [Header("Turn pickups into fights")]
+            [Tooltip("Share of red/blue charge gates deleted outright. Thins them out " +
+                     "without replacing them with anything.")]
+            [Range(0f, 1f)] public float GatesRemoved = 0f;
+
             [Tooltip("Share of charge gates swapped for enemies. Applied after the safe " +
                      "opening, so the start is untouched.")]
             [Range(0f, 1f)] public float GatesToEnemies = 0f;

@@ -180,7 +180,7 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 $"L{levelNumber}: {stats.enemyProps} enemy encounters / {stats.totalEncounters} total " +
                 $"({stats.enemySharePct}%), {stats.gifts} gifts, " +
                 $"barrels {spec.BarrelHpStart:0}->{spec.BarrelHpEnd:0}, " +
-                $"gaps filled {stats.gapsFilled}, swapped {stats.swapped}, surge {stats.surge}, " +
+                $"gatesRemoved {stats.gatesRemoved}, swapped {stats.swapped}, surge {stats.surge}, " +
                 $"{spec.TrackLength / 2.5f:0}s");
 
             return asset;
@@ -232,7 +232,7 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
 
         struct BuildStats
         {
-            public int enemyProps, totalEncounters, enemySharePct, gifts, gapsFilled, enemiesSpaced, swapped, surge;
+            public int enemyProps, totalEncounters, enemySharePct, gifts, gapsFilled, enemiesSpaced, swapped, surge, gatesRemoved;
         }
 
         static BuildStats ApplyDesignRules(GameObject root, EpicRoadBuildSettings.LevelSpec spec)
@@ -296,6 +296,9 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
             // the span at this point excludes the finale enemy and the finish line, so
             // using it produced a zone only a third of the intended size.
             float gearUpEnd = minZ + spec.TrackLength * spec.GearUpShare;
+
+            // 2b. Thin out the red/blue charge gates.
+            int gatesRemoved = RemoveShare(props, p => p.name.Contains("Gate Children"), spec.GatesRemoved);
 
             // 3a. Explicit swaps: turn a share of gates and barrels into fights.
             var enemiesSoFar = props.FindAll(p => p.GetComponentInChildren<WalkEnemyManager>(true) != null);
@@ -459,8 +462,32 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 gapsFilled = gapsFilled,
                 enemiesSpaced = nudged,
                 swapped = swapped,
-                surge = surgeAdded
+                surge = surgeAdded,
+                gatesRemoved = gatesRemoved
             };
+        }
+
+        static int RemoveShare(List<Transform> props, System.Predicate<Transform> match, float share)
+        {
+            if (share <= 0f) return 0;
+            var candidates = props.FindAll(match);
+            int count = Mathf.FloorToInt(candidates.Count * share);
+            if (count <= 0) return 0;
+
+            // Spread the deletions along the level so survivors stay evenly placed.
+            candidates.Sort((a, b) => a.position.z.CompareTo(b.position.z));
+            var doomed = new List<Transform>();
+            for (int i = 0; i < count; i++)
+            {
+                int idx = Mathf.RoundToInt((float)i * (candidates.Count - 1) / Mathf.Max(1, count - 1));
+                if (!doomed.Contains(candidates[idx])) doomed.Add(candidates[idx]);
+            }
+            foreach (var victim in doomed)
+            {
+                props.Remove(victim);
+                Object.DestroyImmediate(victim.gameObject);
+            }
+            return doomed.Count;
         }
 
         static int SwapForEnemies(GameObject root, List<Transform> props, GameObject crowd,
