@@ -180,7 +180,7 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 $"L{levelNumber}: {stats.enemyProps} enemy encounters / {stats.totalEncounters} total " +
                 $"({stats.enemySharePct}%), {stats.gifts} gifts, " +
                 $"barrels {spec.BarrelHpStart:0}->{spec.BarrelHpEnd:0}, " +
-                $"gatesRemoved {stats.gatesRemoved}, x{stats.multiplier}boost {stats.multiplierPlaced}, surge {stats.surge}, " +
+                $"waves {stats.roundWaves}, x{stats.multiplier}boost {stats.multiplierPlaced}, surge {stats.surge}, " +
                 $"{spec.TrackLength / 2.5f:0}s");
 
             return asset;
@@ -232,7 +232,7 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
 
         struct BuildStats
         {
-            public int enemyProps, totalEncounters, enemySharePct, gifts, gapsFilled, enemiesSpaced, swapped, surge, gatesRemoved, multiplierPlaced;
+            public int enemyProps, totalEncounters, enemySharePct, gifts, gapsFilled, enemiesSpaced, swapped, surge, gatesRemoved, multiplierPlaced, roundWaves;
             public float multiplier;
         }
 
@@ -438,6 +438,38 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 placed.Add(chosen);
             }
 
+            // 5a. Rounds: repeating collect-then-fight cycles.
+            //
+            // Replaces the "gear up in peace, then meet everything at once" shape.
+            // Each round gives you a stretch of barrels to build on, then a wave that
+            // makes you spend it. Waves grow through the level.
+            int roundWaves = 0;
+            if (crowd != null && spec.Rounds > 0)
+            {
+                for (int r = 0; r < spec.Rounds; r++)
+                {
+                    float roundStart = minZ + spec.TrackLength * r / spec.Rounds;
+                    float roundEnd = minZ + spec.TrackLength * (r + 1f) / spec.Rounds;
+                    float waveFrom = Mathf.Lerp(roundStart, roundEnd, 1f - spec.WaveShare);
+
+                    float t = spec.Rounds == 1 ? 1f : r / (float)(spec.Rounds - 1);
+                    int groups = Mathf.Max(1, Mathf.RoundToInt(Mathf.Lerp(spec.WaveStartGroups, spec.WaveEndGroups, t)));
+
+                    for (int g = 0; g < groups; g++)
+                    {
+                        float z = Mathf.Lerp(waveFrom, roundEnd, (g + 0.5f) / groups);
+                        if (z <= gearUpEnd) continue;   // never inside the opening
+                        var horde = (GameObject)PrefabUtility.InstantiatePrefab(crowd);
+                        horde.transform.SetParent(root.transform, true);
+                        horde.transform.position = new Vector3(g % 2 == 0 ? -6f : 6f, 0f, z);
+                        horde.name = "Obj_Enemy Wave" + (r + 1);
+                        props.Add(horde.transform);
+                        enemies.Add(horde.transform);
+                        roundWaves++;
+                    }
+                }
+            }
+
             // 5b. Back-half surge: pack the tail of the level with hordes.
             int surgeAdded = 0;
             if (crowd != null && spec.SurgeStart > 0f)
@@ -491,6 +523,7 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 surge = surgeAdded,
                 gatesRemoved = gatesRemoved,
                 multiplierPlaced = multiplierPlaced,
+                roundWaves = roundWaves,
                 multiplier = spec.EarlyMultiplier
             };
         }

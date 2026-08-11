@@ -75,6 +75,22 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
             [Tooltip("Share of barrels swapped for enemies. Applied after the safe opening.")]
             [Range(0f, 1f)] public float BarrelsToEnemies = 0f;
 
+            [Header("Rounds (collect then fight, repeating)")]
+            [Tooltip("Number of collect-then-fight cycles in the level. 0 = off (use the " +
+                     "old back-half surge instead). 4 = four waves spread through the run, " +
+                     "each bigger than the last, instead of one wall at the end.")]
+            [Min(0)] public int Rounds = 0;
+
+            [Tooltip("How much of each round is the fight. 0.35 = collect for the first " +
+                     "two thirds, fight for the last third.")]
+            [Range(0.15f, 0.7f)] public float WaveShare = 0.35f;
+
+            [Tooltip("Enemy groups in the FIRST wave.")]
+            [Min(1)] public int WaveStartGroups = 2;
+
+            [Tooltip("Enemy groups in the LAST wave. Higher than the first, so pressure grows.")]
+            [Min(1)] public int WaveEndGroups = 6;
+
             [Header("Back-half surge")]
             [Tooltip("Where a solid wall of enemies begins, as a share of the level. " +
                      "0 = off. 0.5 = the whole second half is packed with hordes. " +
