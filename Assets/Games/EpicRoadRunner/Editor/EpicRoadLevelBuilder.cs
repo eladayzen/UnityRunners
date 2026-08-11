@@ -180,7 +180,7 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 $"L{levelNumber}: {stats.enemyProps} enemy encounters / {stats.totalEncounters} total " +
                 $"({stats.enemySharePct}%), {stats.gifts} gifts, " +
                 $"barrels {spec.BarrelHpStart:0}->{spec.BarrelHpEnd:0}, " +
-                $"gatesRemoved {stats.gatesRemoved}, swapped {stats.swapped}, surge {stats.surge}, " +
+                $"gatesRemoved {stats.gatesRemoved}, x{stats.multiplier}boost {stats.multiplierPlaced}, surge {stats.surge}, " +
                 $"{spec.TrackLength / 2.5f:0}s");
 
             return asset;
@@ -232,7 +232,8 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
 
         struct BuildStats
         {
-            public int enemyProps, totalEncounters, enemySharePct, gifts, gapsFilled, enemiesSpaced, swapped, surge, gatesRemoved;
+            public int enemyProps, totalEncounters, enemySharePct, gifts, gapsFilled, enemiesSpaced, swapped, surge, gatesRemoved, multiplierPlaced;
+            public float multiplier;
         }
 
         static BuildStats ApplyDesignRules(GameObject root, EpicRoadBuildSettings.LevelSpec spec)
@@ -267,6 +268,37 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 gate.SetGateValue(MOST_Gate.GateOperator.Add, hp);
             }
 
+            // Opening stretch reserved for gearing up - no enemies allowed before this.
+            // Measured against the configured track length, NOT the rolled props' span:
+            // the span at this point excludes the finale enemy and the finish line, so
+            // using it produced a zone only a third of the intended size.
+            float gearUpEnd = minZ + spec.TrackLength * spec.GearUpShare;
+
+            // 1b. Early multiplier barrel: a big head start right after the opening.
+            // Barrel Children run with EnableFixedOutput + FixedOutputControlGates, so
+            // the reward comes from the OUTPUT value, not GateValue (which is its HP).
+            int multiplierPlaced = 0;
+            if (spec.EarlyMultiplier > 1f)
+            {
+                Transform earliest = null;
+                foreach (var p in props)
+                {
+                    if (!p.name.Contains("Barrel Children")) continue;
+                    if (p.position.z <= gearUpEnd) continue;
+                    if (earliest == null || p.position.z < earliest.position.z) earliest = p;
+                }
+                if (earliest != null)
+                {
+                    var gate = earliest.GetComponentInChildren<MOST_Gate>(true);
+                    if (gate != null)
+                    {
+                        gate.SetOutputValue(MOST_Gate.GateOperator.Multiply, spec.EarlyMultiplier);
+                        earliest.name = "Obj_EarlyMultiplier";
+                        multiplierPlaced = 1;
+                    }
+                }
+            }
+
             // 2. Charge gates hide behind a barrel, so the barrel absorbs your fire.
             var barrels = props.FindAll(p => p.name.Contains("Barrel"));
             foreach (var p in props)
@@ -290,12 +322,6 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 if (nearest != null)
                     p.position = new Vector3(nearest.position.x, p.position.y, nearest.position.z + step * 0.85f);
             }
-
-            // Opening stretch reserved for gearing up - no enemies allowed before this.
-            // Measured against the configured track length, NOT the rolled props' span:
-            // the span at this point excludes the finale enemy and the finish line, so
-            // using it produced a zone only a third of the intended size.
-            float gearUpEnd = minZ + spec.TrackLength * spec.GearUpShare;
 
             // 2b. Thin out the red/blue charge gates.
             int gatesRemoved = RemoveShare(props, p => p.name.Contains("Gate Children"), spec.GatesRemoved);
@@ -463,7 +489,9 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 enemiesSpaced = nudged,
                 swapped = swapped,
                 surge = surgeAdded,
-                gatesRemoved = gatesRemoved
+                gatesRemoved = gatesRemoved,
+                multiplierPlaced = multiplierPlaced,
+                multiplier = spec.EarlyMultiplier
             };
         }
 

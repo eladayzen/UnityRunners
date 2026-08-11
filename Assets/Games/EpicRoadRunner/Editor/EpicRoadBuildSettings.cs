@@ -57,6 +57,12 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
             [Tooltip("Most positive starting value. Keep low - a high start is free troops.")]
             public float GateMax = 3f;
 
+            [Header("Early boost")]
+            [Tooltip("Multiplier barrel placed just after the safe opening. 0 or 1 = off. " +
+                     "2 = the first barrel doubles your squad, which is how you survive " +
+                     "the later levels. Safe now that crowd size is hard-capped at 150.")]
+            [Range(0f, 5f)] public float EarlyMultiplier = 0f;
+
             [Header("Turn pickups into fights")]
             [Tooltip("Share of red/blue charge gates deleted outright. Thins them out " +
                      "without replacing them with anything.")]

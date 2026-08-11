@@ -92,6 +92,28 @@ namespace RunnerPac.EpicRoadRunner
             foreach (var enemy in FindObjectsByType<WalkEnemyManager>(FindObjectsSortMode.None))
             {
                 if (!enemy.gameObject.activeInHierarchy) continue;
+
+                // Already dead, just not cleaned up yet. MOST_Damage waits
+                // DelayBeforeApply (1.75s on these prefabs) after death before it
+                // deactivates or destroys the object, so a corpse stays
+                // active-in-hierarchy that whole time. Counting those added ~1.75s
+                // of empty road after the final kill.
+                //
+                // Two signals, because neither alone is reliable:
+                //   Health <= 0    - true for the normal path, where the squad shoots
+                //                    an enemy down. Safe to read here (not at spawn):
+                //                    Arm() runs on OnStartPlay and the first check is
+                //                    graceSeconds later, long after every
+                //                    MOST_Damage.Start() has set Health to MaxHealth.
+                //   !StartMove     - MOST_Damage.OnDefeat is wired on these prefabs to
+                //                    WalkEnemyManager.DestroyChild(), which clears
+                //                    StartMove. This catches deaths that never touch
+                //                    health, e.g. a direct InstantKill(), which sets an
+                //                    internal flag and leaves Health at max.
+                var damage = enemy.GetComponent<MOST_Damage>();
+                if (damage != null && damage.IsDefeated()) continue;
+                if (!enemy.StartMove) continue;
+
                 // One left far behind has already been outrun; it cannot stall the level.
                 if (enemy.transform.position.z < playerZ - behindCutoff) continue;
                 remaining++;
