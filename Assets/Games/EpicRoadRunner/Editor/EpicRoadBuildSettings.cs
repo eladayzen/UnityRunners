@@ -75,6 +75,12 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
             [Tooltip("Share of barrels swapped for enemies. Applied after the safe opening.")]
             [Range(0f, 1f)] public float BarrelsToEnemies = 0f;
 
+            [Header("Movement")]
+            [Tooltip("Share of single-lane encounters forced onto the FAR left/right lanes, " +
+                     "alternating. 0 = off. 1 = every one, so you must swing across the road " +
+                     "constantly instead of parking in the middle and sweeping everything.")]
+            [Range(0f, 1f)] public float LaneWeave = 0f;
+
             [Header("Back-half surge")]
             [Tooltip("Where a solid wall of enemies begins, as a share of the level. " +
                      "0 = off. 0.5 = the whole second half is packed with hordes. " +

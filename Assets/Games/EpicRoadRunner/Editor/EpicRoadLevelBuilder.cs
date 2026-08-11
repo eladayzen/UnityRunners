@@ -180,7 +180,7 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 $"L{levelNumber}: {stats.enemyProps} enemy encounters / {stats.totalEncounters} total " +
                 $"({stats.enemySharePct}%), {stats.gifts} gifts, " +
                 $"barrels {spec.BarrelHpStart:0}->{spec.BarrelHpEnd:0}, " +
-                $"gatesRemoved {stats.gatesRemoved}, x{stats.multiplier}boost {stats.multiplierPlaced}, surge {stats.surge}, " +
+                $"weaved {stats.weaved}, x{stats.multiplier}boost {stats.multiplierPlaced}, surge {stats.surge}, " +
                 $"{spec.TrackLength / 2.5f:0}s");
 
             return asset;
@@ -232,7 +232,7 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
 
         struct BuildStats
         {
-            public int enemyProps, totalEncounters, enemySharePct, gifts, gapsFilled, enemiesSpaced, swapped, surge, gatesRemoved, multiplierPlaced;
+            public int enemyProps, totalEncounters, enemySharePct, gifts, gapsFilled, enemiesSpaced, swapped, surge, gatesRemoved, multiplierPlaced, weaved;
             public float multiplier;
         }
 
@@ -446,7 +446,13 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 float surgeTo = float.MinValue;
                 foreach (var p in props) surgeTo = Mathf.Max(surgeTo, p.position.z);
                 float gapStep = Mathf.Max(1f, step * spec.SurgeSpacingRows);
-                float[] lanes = { -6f, 0f, 6f };
+                // With weave on, the wall alternates hard left/right instead of
+                // cycling through centre. A wide squad can cover centre+one side at
+                // once, so cycling lets you sit still; outer-only forces a full
+                // crossing between every horde.
+                float[] lanes = spec.LaneWeave >= 0.5f
+                    ? new float[] { -6f, 6f }
+                    : new float[] { -6f, 0f, 6f };
                 int lane = 0;
                 for (float z = surgeFrom; z <= surgeTo; z += gapStep)
                 {
@@ -458,6 +464,38 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                     enemies.Add(horde.transform);
                     lane++;
                     surgeAdded++;
+                }
+            }
+
+            // 5c. Lane weave: force single-lane encounters to alternate hard left/right.
+            //
+            // Lane variety alone does not create movement, because a large squad is
+            // physically wide - it sweeps several lanes at once and collects/shoots
+            // everything without steering. Pushing encounters to the outer lanes and
+            // alternating them means you have to commit to one side and then cross.
+            int weaved = 0;
+            if (spec.LaneWeave > 0f)
+            {
+                props.Sort((a, b2) => a.position.z.CompareTo(b2.position.z));
+                var rows = new List<List<Transform>>();
+                foreach (var p in props)
+                {
+                    if (rows.Count > 0 && Mathf.Abs(rows[rows.Count - 1][0].position.z - p.position.z) < 0.6f)
+                        rows[rows.Count - 1].Add(p);
+                    else rows.Add(new List<Transform> { p });
+                }
+
+                float outer = 6f;
+                int side = 0;
+                foreach (var row in rows)
+                {
+                    if (row.Count != 1) continue;                       // pairs/full rows already span lanes
+                    if (row[0].name.Contains("Surge")) continue;        // the wall is meant to be unavoidable
+                    if (Random.value > spec.LaneWeave) continue;
+                    var t = row[0];
+                    t.position = new Vector3(side == 0 ? -outer : outer, t.position.y, t.position.z);
+                    side = 1 - side;
+                    weaved++;
                 }
             }
 
@@ -491,6 +529,7 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 surge = surgeAdded,
                 gatesRemoved = gatesRemoved,
                 multiplierPlaced = multiplierPlaced,
+                weaved = weaved,
                 multiplier = spec.EarlyMultiplier
             };
         }
