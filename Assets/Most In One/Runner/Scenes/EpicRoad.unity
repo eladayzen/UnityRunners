@@ -2062,18 +2062,18 @@ MonoBehaviour:
   MainMenu: {fileID: 102900000, guid: b10c34b17beb64620b78fb00611ffb5a, type: 3}
   _mainMenuPath: Assets/Most In One/Runner/Scenes/EpicRoad.unity
   LevelsPrefs:
-  - {fileID: 5670974003568719195, guid: 7f5330382d6f24ef2a55cac26f3bd75b, type: 3}
-  - {fileID: 4732913154004115557, guid: b63a87c5f7cc34520a40287a92c906b6, type: 3}
-  - {fileID: 9047919720007074735, guid: 12f7e6d896da8457a93a1c841fd2dc3b, type: 3}
-  - {fileID: 830297663252532644, guid: 289d95bb6783c413d8a5d82356d57c71, type: 3}
-  - {fileID: 1341805209174682501, guid: 31c3735410bbf496aa0b47005de6b3e1, type: 3}
-  - {fileID: 7768137277781940258, guid: a74e8155bf11642ad97e4c117565f9f6, type: 3}
-  - {fileID: 7086119034238138874, guid: 257a9e01f048e46ba9b38b2524703eb7, type: 3}
-  - {fileID: 2068627960486465873, guid: 9f3077b81cb9b41da93d8fb9e689bc1c, type: 3}
-  - {fileID: 6621115793716161510, guid: 0f8e8134ff29140fcb0054d645d568ff, type: 3}
-  - {fileID: 1802216306606132478, guid: 8b6660dd938d449a6b26c39e60b5f0e9, type: 3}
-  - {fileID: 1204705821544491815, guid: ad100bfee7a97458682d7dba9c274131, type: 3}
-  - {fileID: 314613396005225811, guid: bdb24ce065ba441c4ae87e62832de98f, type: 3}
+  - {fileID: 1227032640108158147, guid: 7f5330382d6f24ef2a55cac26f3bd75b, type: 3}
+  - {fileID: 7061531995476027321, guid: b63a87c5f7cc34520a40287a92c906b6, type: 3}
+  - {fileID: 7714258604998438514, guid: 9bad0ecad0a634bc2899fb0fc8eb73bc, type: 3}
+  - {fileID: 8740334747687941790, guid: 289d95bb6783c413d8a5d82356d57c71, type: 3}
+  - {fileID: 4530536128221403140, guid: 31c3735410bbf496aa0b47005de6b3e1, type: 3}
+  - {fileID: 4271682228786340010, guid: a74e8155bf11642ad97e4c117565f9f6, type: 3}
+  - {fileID: 6605289348590405757, guid: 257a9e01f048e46ba9b38b2524703eb7, type: 3}
+  - {fileID: 1666734580041391997, guid: 9f3077b81cb9b41da93d8fb9e689bc1c, type: 3}
+  - {fileID: 3868329555292254840, guid: 0f8e8134ff29140fcb0054d645d568ff, type: 3}
+  - {fileID: 41537990223124141, guid: 8b6660dd938d449a6b26c39e60b5f0e9, type: 3}
+  - {fileID: 603192569805262086, guid: ad100bfee7a97458682d7dba9c274131, type: 3}
+  - {fileID: 2654919048019987226, guid: bdb24ce065ba441c4ae87e62832de98f, type: 3}
   LevelsScene:
   - {fileID: 102900000, guid: d825ca1bcc7b54de2a7e58b95cdfa202, type: 3}
   - {fileID: 102900000, guid: d825ca1bcc7b54de2a7e58b95cdfa202, type: 3}
@@ -3071,8 +3071,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   manager: {fileID: 150243434}
   character: {fileID: 1397730767}
-  checkInterval: 0.4
-  graceSeconds: 1.5
+  checkInterval: 0.2
+  graceSeconds: 1
   aheadMargin: 1
   behindCutoff: 15
 --- !u!114 &221617581
@@ -3087,7 +3087,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d9e43d099c4e4029bef1e372064bf2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartAtLevel: 6
+  StartAtLevel: 0
   PersistToSave: 0
   manager: {fileID: 150243434}
 --- !u!114 &221617582
