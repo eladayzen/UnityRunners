@@ -114,8 +114,17 @@ namespace RunnerPac.EpicRoadRunner
                 if (damage != null && damage.IsDefeated()) continue;
                 if (!enemy.StartMove) continue;
 
-                // One left far behind has already been outrun; it cannot stall the level.
-                if (enemy.transform.position.z < playerZ - behindCutoff) continue;
+                // Only enemies still IN FRONT of the squad count.
+                //
+                // Enemies die solely to bullets, which spawn on the squad and travel
+                // forward. Anything level with or behind the squad can therefore never
+                // be shot - and aggro'd enemies chase the player, so they end up sitting
+                // exactly there. Those became permanently-alive blockers that held the
+                // level open until the finish line arrived, which is the long wait on
+                // the enemy-heavy levels. They are no longer incoming, so they no longer
+                // count. If one is still grinding the squad down, that resolves as a
+                // loss on its own.
+                if (enemy.transform.position.z <= playerZ + aheadMargin) continue;
                 remaining++;
             }
 
