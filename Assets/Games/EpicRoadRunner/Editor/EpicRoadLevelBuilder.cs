@@ -55,6 +55,11 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 EditorGUILayout.Slider(share,
                     0f, 0.6f, new GUIContent("Fights", "Share of encounters that are enemies."));
 
+                EditorGUILayout.PropertyField(spec.FindPropertyRelative("WaveShape"),
+                    new GUIContent("Enemy formation",
+                        "Where enemies sit across the road. Change this to make a level feel " +
+                        "different without making it harder."));
+
                 EditorGUILayout.Slider(gearUp,
                     0f, 0.5f, new GUIContent("Safe opening", "Share of the level with no enemies, so you can gear up."));
 
@@ -116,6 +121,68 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
             AssetDatabase.SaveAssets();
 
             Debug.Log("[EpicRoad] Build complete.\n" + report);
+        }
+
+        // Rebuild ONE level, leaving every other level's layout untouched.
+        //
+        // BuildAll re-rolls everything: the generator picks rows at random and the
+        // barrel ramp jitters each value by Random.Range(0.85f, 1.15f), so running
+        // it to retune a single level silently reshuffles the other twelve - levels
+        // that were already played and signed off. That makes "just lower the HP on
+        // level 8" an unreviewable change to the whole game.
+        //
+        // BuildOne deletes the old prefab and writes a new asset, so the manager's
+        // LevelsPrefs entry would be left pointing at a deleted asset. That exact
+        // thing happened once before and shipped a level slot with a missing
+        // reference, so this rewires just that one slot and leaves the rest alone.
+        public static void BuildSingle(EpicRoadBuildSettings settings, int levelNumber)
+        {
+            if (EditorApplication.isPlaying)
+            {
+                EditorUtility.DisplayDialog("EpicRoad", "Exit Play mode before building levels.", "OK");
+                return;
+            }
+            if (levelNumber < 1 || levelNumber > settings.Levels.Length)
+            {
+                Debug.LogError($"[EpicRoad] Level {levelNumber} is outside 1..{settings.Levels.Length}.");
+                return;
+            }
+
+            var spec = settings.Levels[levelNumber - 1];
+            if (spec == null || spec.Profile == null)
+            {
+                Debug.LogError($"[EpicRoad] Level {levelNumber} has no profile assigned.");
+                return;
+            }
+
+            var scene = EditorSceneManager.GetActiveScene();
+            var report = new System.Text.StringBuilder();
+
+            // Only this level's scene root, not all of them.
+            foreach (var go in scene.GetRootGameObjects())
+                if (System.Text.RegularExpressions.Regex.IsMatch(go.name, @"^L" + levelNumber + @" #"))
+                    Object.DestroyImmediate(go);
+
+            var prefab = BuildOne(settings, spec, levelNumber, report);
+            if (prefab == null) return;
+
+            var manager = Object.FindFirstObjectByType<UniversalGameManager>();
+            if (manager == null) { Debug.LogError("[EpicRoad] No UniversalGameManager in the scene."); return; }
+
+            var so = new SerializedObject(manager);
+            var array = so.FindProperty("LevelsPrefs");
+            if (array.arraySize < levelNumber) array.arraySize = levelNumber;
+            array.GetArrayElementAtIndex(levelNumber - 1).objectReferenceValue = prefab;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(manager);
+
+            // Deliberately does NOT reset the level counter - unlike BuildAll, this
+            // is a spot fix and should not throw away where the player is.
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+
+            Debug.Log($"[EpicRoad] Rebuilt level {levelNumber} only.\n" + report);
         }
 
         static void ClearExistingLevelRoots()
@@ -228,6 +295,72 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
                 size <= 12 ? "Assets/Games/EpicRoadRunner/Prefabs/Enemies Crowd Medium.prefab" :
                              "Assets/Most In One/Runner/Prefabs/Enemies/Enemies Crowd.prefab";
             return AssetDatabase.LoadAssetAtPath<GameObject>(path);
+        }
+
+        // Where each group of a wave sits on the road.
+        //
+        // This is the difference between two levels feeling like variants and
+        // feeling like the same level with different numbers. Every level used to
+        // use AlternateSides, so no matter how the round counts were tuned, the
+        // enemies always arrived left, right, left, right, on the shoulders, with
+        // the centre lane permanently free. Changing the shape changes where you
+        // have to be and which lane is safe, which reads instantly.
+        //
+        // Lanes are the road's three x positions: -6 (left), 0 (centre), 6 (right).
+        static void PlaceInWave(EpicRoadBuildSettings.WaveShape shape, int g, int groups,
+                                float waveFrom, float waveTo, int round,
+                                out float x, out float z)
+        {
+            const float Lane = 6f;
+
+            switch (shape)
+            {
+                // Two hordes abreast on both shoulders, centre lane left open as
+                // the escape route. Reads as walls you thread rather than targets
+                // you pick off, so the same enemy count feels heavier without
+                // being harder - the gap is always there if you commit to it.
+                case EpicRoadBuildSettings.WaveShape.Pincer:
+                {
+                    int pairs = Mathf.Max(1, Mathf.CeilToInt(groups / 2f));
+                    z = Mathf.Lerp(waveFrom, waveTo, (g / 2 + 0.5f) / pairs);
+                    x = (g % 2 == 0) ? -Lane : Lane;
+                    return;
+                }
+
+                // Rolls across the road one lane at a time - left, centre, right,
+                // centre - so the wave arrives as a diagonal you track sideways
+                // through rather than a pair of fixed shoulders.
+                case EpicRoadBuildSettings.WaveShape.Sweep:
+                {
+                    z = Mathf.Lerp(waveFrom, waveTo, (g + 0.5f) / groups);
+                    // Alternate the sweep direction per round so a level does not
+                    // become one repeated left-to-right motion.
+                    int step = (round % 2 == 0) ? g : (groups - 1 - g);
+                    int lane = step % 4;          // 0,1,2,3 -> left, centre, right, centre
+                    x = lane == 0 ? -Lane : lane == 2 ? Lane : 0f;
+                    return;
+                }
+
+                // Deterministic pseudo-random lane per group. Same level always
+                // builds the same layout (no Random here - builds must repeat),
+                // but there is no pattern to read ahead, so you react rather than
+                // memorise. Best with small crowds, where a wrong guess is cheap.
+                case EpicRoadBuildSettings.WaveShape.Scatter:
+                {
+                    z = Mathf.Lerp(waveFrom, waveTo, (g + 0.5f) / groups);
+                    int hash = (round * 73856093) ^ (g * 19349663);
+                    x = (Mathf.Abs(hash) % 3 - 1) * Lane;
+                    return;
+                }
+
+                // Original behaviour: shoulders only, never the centre.
+                default:
+                {
+                    z = Mathf.Lerp(waveFrom, waveTo, (g + 0.5f) / groups);
+                    x = (g % 2 == 0) ? -Lane : Lane;
+                    return;
+                }
+            }
         }
 
         struct BuildStats
@@ -457,11 +590,12 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
 
                     for (int g = 0; g < groups; g++)
                     {
-                        float z = Mathf.Lerp(waveFrom, roundEnd, (g + 0.5f) / groups);
+                        PlaceInWave(spec.WaveShape, g, groups, waveFrom, roundEnd, r,
+                                    out float x, out float z);
                         if (z <= gearUpEnd) continue;   // never inside the opening
                         var horde = (GameObject)PrefabUtility.InstantiatePrefab(crowd);
                         horde.transform.SetParent(root.transform, true);
-                        horde.transform.position = new Vector3(g % 2 == 0 ? -6f : 6f, 0f, z);
+                        horde.transform.position = new Vector3(x, 0f, z);
                         horde.name = "Obj_Enemy Wave" + (r + 1);
                         props.Add(horde.transform);
                         enemies.Add(horde.transform);

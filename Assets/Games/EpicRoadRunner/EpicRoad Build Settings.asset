@@ -33,6 +33,7 @@ MonoBehaviour:
     WaveShare: 0.3
     WaveStartGroups: 1
     WaveEndGroups: 2
+    WaveShape: 0
     SurgeStart: 0
     SurgeSpacingRows: 1
     GearUpShare: 0.28
@@ -58,6 +59,7 @@ MonoBehaviour:
     WaveShare: 0.3
     WaveStartGroups: 1
     WaveEndGroups: 2
+    WaveShape: 0
     SurgeStart: 0
     SurgeSpacingRows: 1
     GearUpShare: 0.2
@@ -83,6 +85,7 @@ MonoBehaviour:
     WaveShare: 0.32
     WaveStartGroups: 2
     WaveEndGroups: 3
+    WaveShape: 0
     SurgeStart: 0
     SurgeSpacingRows: 0.7
     GearUpShare: 0.14
@@ -108,6 +111,7 @@ MonoBehaviour:
     WaveShare: 0.32
     WaveStartGroups: 2
     WaveEndGroups: 4
+    WaveShape: 0
     SurgeStart: 0
     SurgeSpacingRows: 0.7
     GearUpShare: 0.12
@@ -133,6 +137,7 @@ MonoBehaviour:
     WaveShare: 0.35
     WaveStartGroups: 3
     WaveEndGroups: 4
+    WaveShape: 0
     SurgeStart: 0
     SurgeSpacingRows: 0.8
     GearUpShare: 0.1
@@ -158,6 +163,7 @@ MonoBehaviour:
     WaveShare: 0.35
     WaveStartGroups: 3
     WaveEndGroups: 5
+    WaveShape: 0
     SurgeStart: 0
     SurgeSpacingRows: 0.65
     GearUpShare: 0.1
@@ -183,6 +189,7 @@ MonoBehaviour:
     WaveShare: 0.35
     WaveStartGroups: 3
     WaveEndGroups: 5
+    WaveShape: 0
     SurgeStart: 0
     SurgeSpacingRows: 0.75
     GearUpShare: 0.08
@@ -196,7 +203,7 @@ MonoBehaviour:
     EnemyShare: 0.38
     MinGifts: 21
     CrowdSize: 12
-    BarrelHpStart: 6
+    BarrelHpStart: 3
     BarrelHpEnd: 29
     GateMin: -50
     GateMax: -20
@@ -208,6 +215,7 @@ MonoBehaviour:
     WaveShare: 0.38
     WaveStartGroups: 4
     WaveEndGroups: 6
+    WaveShape: 0
     SurgeStart: 0
     SurgeSpacingRows: 0.95
     GearUpShare: 0.08
@@ -233,6 +241,7 @@ MonoBehaviour:
     WaveShare: 0.38
     WaveStartGroups: 4
     WaveEndGroups: 7
+    WaveShape: 0
     SurgeStart: 0
     SurgeSpacingRows: 0.9
     GearUpShare: 0.08
@@ -258,6 +267,7 @@ MonoBehaviour:
     WaveShare: 0.38
     WaveStartGroups: 4
     WaveEndGroups: 7
+    WaveShape: 0
     SurgeStart: 0
     SurgeSpacingRows: 1
     GearUpShare: 0.08
@@ -265,53 +275,81 @@ MonoBehaviour:
     EnemyClearRows: 1.15
   - Label: L11
     Profile: {fileID: 11400000, guid: 9bad2a23f0d084d3e8ac2d0713cb07ba, type: 2}
-    RowSpacing: 6
+    RowSpacing: 8
     TrackLength: 205
     StartClearance: 24
     EnemyShare: 0.4
-    MinGifts: 24
+    MinGifts: 22
     CrowdSize: 20
     BarrelHpStart: 6
-    BarrelHpEnd: 38
+    BarrelHpEnd: 40
     GateMin: -50
     GateMax: -20
     EarlyMultiplier: 3
     GatesRemoved: 0.7
     GatesToEnemies: 0
     BarrelsToEnemies: 0
-    Rounds: 6
-    WaveShare: 0.4
-    WaveStartGroups: 5
-    WaveEndGroups: 8
+    Rounds: 4
+    WaveShare: 0.28
+    WaveStartGroups: 8
+    WaveEndGroups: 13
+    WaveShape: 1
     SurgeStart: 0
     SurgeSpacingRows: 0.85
-    GearUpShare: 0.08
+    GearUpShare: 0.1
     MaxGapRows: 1.6
     EnemyClearRows: 1.15
   - Label: L12
     Profile: {fileID: 11400000, guid: fe90650ce67924ab591b990919d105d6, type: 2}
-    RowSpacing: 7
-    TrackLength: 195
+    RowSpacing: 5.5
+    TrackLength: 190
     StartClearance: 24
-    EnemyShare: 0.44
-    MinGifts: 25
-    CrowdSize: 20
-    BarrelHpStart: 6
-    BarrelHpEnd: 42
+    EnemyShare: 0.38
+    MinGifts: 28
+    CrowdSize: 12
+    BarrelHpStart: 5
+    BarrelHpEnd: 28
     GateMin: -50
     GateMax: -20
     EarlyMultiplier: 3
-    GatesRemoved: 0.7
+    GatesRemoved: 0.35
     GatesToEnemies: 0
     BarrelsToEnemies: 0
-    Rounds: 6
-    WaveShare: 0.4
+    Rounds: 10
+    WaveShare: 0.5
     WaveStartGroups: 5
     WaveEndGroups: 9
+    WaveShape: 2
     SurgeStart: 0
     SurgeSpacingRows: 1
-    GearUpShare: 0.08
+    GearUpShare: 0.07
     MaxGapRows: 1.6
-    EnemyClearRows: 1.15
+    EnemyClearRows: 1
+  - Label: L13
+    Profile: {fileID: 11400000, guid: 7ea5bdd80e9246b58625d5617a41d426, type: 2}
+    RowSpacing: 4.5
+    TrackLength: 175
+    StartClearance: 24
+    EnemyShare: 0.34
+    MinGifts: 32
+    CrowdSize: 6
+    BarrelHpStart: 4
+    BarrelHpEnd: 22
+    GateMin: -50
+    GateMax: -20
+    EarlyMultiplier: 2
+    GatesRemoved: 0.1
+    GatesToEnemies: 0
+    BarrelsToEnemies: 0
+    Rounds: 12
+    WaveShare: 0.6
+    WaveStartGroups: 8
+    WaveEndGroups: 14
+    WaveShape: 3
+    SurgeStart: 0
+    SurgeSpacingRows: 1
+    GearUpShare: 0.05
+    MaxGapRows: 1.6
+    EnemyClearRows: 0.9
   OutputFolder: Assets/Games/EpicRoadRunner/Levels
   RollsPerLevel: 20

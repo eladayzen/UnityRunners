@@ -2062,18 +2062,19 @@ MonoBehaviour:
   MainMenu: {fileID: 102900000, guid: b10c34b17beb64620b78fb00611ffb5a, type: 3}
   _mainMenuPath: Assets/Most In One/Runner/Scenes/EpicRoad.unity
   LevelsPrefs:
-  - {fileID: 1227032640108158147, guid: 7f5330382d6f24ef2a55cac26f3bd75b, type: 3}
-  - {fileID: 7061531995476027321, guid: b63a87c5f7cc34520a40287a92c906b6, type: 3}
-  - {fileID: 7714258604998438514, guid: 9bad0ecad0a634bc2899fb0fc8eb73bc, type: 3}
-  - {fileID: 8740334747687941790, guid: 289d95bb6783c413d8a5d82356d57c71, type: 3}
-  - {fileID: 4530536128221403140, guid: 31c3735410bbf496aa0b47005de6b3e1, type: 3}
-  - {fileID: 4271682228786340010, guid: a74e8155bf11642ad97e4c117565f9f6, type: 3}
-  - {fileID: 6605289348590405757, guid: 257a9e01f048e46ba9b38b2524703eb7, type: 3}
-  - {fileID: 1666734580041391997, guid: 9f3077b81cb9b41da93d8fb9e689bc1c, type: 3}
-  - {fileID: 3868329555292254840, guid: 0f8e8134ff29140fcb0054d645d568ff, type: 3}
-  - {fileID: 41537990223124141, guid: 8b6660dd938d449a6b26c39e60b5f0e9, type: 3}
-  - {fileID: 603192569805262086, guid: ad100bfee7a97458682d7dba9c274131, type: 3}
-  - {fileID: 2654919048019987226, guid: bdb24ce065ba441c4ae87e62832de98f, type: 3}
+  - {fileID: 8314434690029594020, guid: 7f5330382d6f24ef2a55cac26f3bd75b, type: 3}
+  - {fileID: 5245068674676028487, guid: b63a87c5f7cc34520a40287a92c906b6, type: 3}
+  - {fileID: 3006925968765603393, guid: 9bad0ecad0a634bc2899fb0fc8eb73bc, type: 3}
+  - {fileID: 2038401078199206112, guid: 289d95bb6783c413d8a5d82356d57c71, type: 3}
+  - {fileID: 1680926780337617344, guid: 31c3735410bbf496aa0b47005de6b3e1, type: 3}
+  - {fileID: 4656364540119394307, guid: a74e8155bf11642ad97e4c117565f9f6, type: 3}
+  - {fileID: 7563385950232710802, guid: 257a9e01f048e46ba9b38b2524703eb7, type: 3}
+  - {fileID: 8768707998058918091, guid: 9f3077b81cb9b41da93d8fb9e689bc1c, type: 3}
+  - {fileID: 6867089474899996999, guid: 0f8e8134ff29140fcb0054d645d568ff, type: 3}
+  - {fileID: 428412394728677850, guid: 8b6660dd938d449a6b26c39e60b5f0e9, type: 3}
+  - {fileID: 8892290345479379658, guid: ad100bfee7a97458682d7dba9c274131, type: 3}
+  - {fileID: 8544353597896403064, guid: bdb24ce065ba441c4ae87e62832de98f, type: 3}
+  - {fileID: 5957744214258125257, guid: 47b9eba19441b49a38d90868d65b6d14, type: 3}
   LevelsScene:
   - {fileID: 102900000, guid: d825ca1bcc7b54de2a7e58b95cdfa202, type: 3}
   - {fileID: 102900000, guid: d825ca1bcc7b54de2a7e58b95cdfa202, type: 3}
@@ -3023,6 +3024,7 @@ GameObject:
   - component: {fileID: 221617580}
   - component: {fileID: 221617581}
   - component: {fileID: 221617582}
+  - component: {fileID: 221617583}
   m_Layer: 0
   m_Name: LevelPlayer
   m_TagString: Untagged
@@ -3087,7 +3089,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d9e43d099c4e4029bef1e372064bf2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartAtLevel: 0
+  StartAtLevel: 6
   PersistToSave: 0
   manager: {fileID: 150243434}
 --- !u!114 &221617582
@@ -3147,6 +3149,21 @@ MonoBehaviour:
     RoadLines: {r: 0.95, g: 1, b: 0.45, a: 1}
   RoadBlocksMaterial: 
   RoadLinesMaterial: 
+  LogChoice: 1
+--- !u!114 &221617583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 221617577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcd4edac3de9489e8bc91eed6ab5cbbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  manager: {fileID: 0}
+  LoopStart: 11
   LogChoice: 1
 --- !u!1001 &227640727
 PrefabInstance:

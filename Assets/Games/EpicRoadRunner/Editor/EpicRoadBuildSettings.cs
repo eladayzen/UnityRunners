@@ -13,6 +13,17 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
     [CreateAssetMenu(menuName = "EpicRoad/Build Settings", fileName = "EpicRoad Build Settings")]
     public class EpicRoadBuildSettings : ScriptableObject
     {
+        // How a wave is laid out across the road's three lanes.
+        // Changing this changes where enemies are, not how many - the cheapest
+        // way to make two levels of equal difficulty feel unrelated.
+        public enum WaveShape
+        {
+            AlternateSides = 0,   // left, right, left, right - centre always free
+            Pincer = 1,           // both shoulders at once, centre is the gap
+            Sweep = 2,            // rolls across the lanes as a diagonal
+            Scatter = 3,          // unpredictable lane per group, but deterministic
+        }
+
         [System.Serializable]
         public class LevelSpec
         {
@@ -90,6 +101,13 @@ namespace RunnerPac.EpicRoadRunner.EditorTools
 
             [Tooltip("Enemy groups in the LAST wave. Higher than the first, so pressure grows.")]
             [Min(1)] public int WaveEndGroups = 6;
+
+            // No initializer on purpose: the field shares its name with its type, and
+            // default(WaveShape) is already AlternateSides (0), which is the old
+            // behaviour every existing level was built with.
+            [Tooltip("Where wave enemies sit across the road. The strongest lever for making " +
+                     "two levels of the same difficulty feel like different levels.")]
+            public WaveShape WaveShape;
 
             [Header("Back-half surge")]
             [Tooltip("Where a solid wall of enemies begins, as a share of the level. " +

@@ -117,3 +117,71 @@ Total after the last kill: ~4.4s → ~1.7s.
 4. Curve rework across L3–L8, then regenerate and re-verify.
 
 Each step is its own commit so any of it can be reverted independently.
+
+## Endgame: three variants, then a loop (L11–L13)
+
+The run used to stop having new ideas around L8. Two separate causes:
+
+1. **Levels 13+ were literally L12.** `UniversalGameManager.Loading()` picks its
+   level with `LevelsPrefs[Mathf.Min(level, LevelsPrefs.Length) - 1]`. Past the
+   last entry that clamps, so 13, 14 and 50 all loaded the same prefab
+   byte-for-byte, forever.
+2. **L11 and L12 were near-identical anyway.** They differed only by
+   `RowSpacing` 6→7 and one extra wave group. Same rounds, same crowd size, and
+   — the real problem — the same enemy placement.
+
+### Placement was the missing lever
+
+Every wave in every level was positioned with `g % 2 == 0 ? -6 : 6`: enemies
+always on the shoulders, alternating, centre lane permanently free. No amount of
+retuning round counts changes what that *feels* like, because the thing you
+actually read while playing is where the enemies are.
+
+`WaveShape` on each level spec now controls that:
+
+| Shape | Layout | Reads as |
+|---|---|---|
+| `AlternateSides` | left, right, left, right — centre free | the original; L1–L10 keep it |
+| `Pincer` | both shoulders at once, centre is the gap | walls you thread |
+| `Sweep` | rolls across the lanes as a diagonal | a wave you track sideways |
+| `Scatter` | deterministic pseudo-random lane per group | react, don't memorise |
+
+`Scatter` hashes `(round, group)` rather than calling `Random`, so a level still
+builds identically every time — builds have to be repeatable.
+
+### The three variants
+
+Same pressure, different shape. Wave enemy units are matched so none is harder:
+
+| | L11 | L12 | L13 |
+|---|---|---|---|
+| Feel | few huge walls | steady medium waves | constant swarm |
+| Rounds | 4 | 10 | 12 |
+| Groups per wave | 8 → 13 | 5 → 9 | 8 → 14 |
+| Crowd size | 20 | 12 | 6 |
+| **Wave units** | **840** | **840** | **798** |
+| Formation | Pincer | Sweep | Scatter |
+| Row spacing | 8 (airy) | 5.5 | 4.5 (dense) |
+| Track length | 205 | 190 | 175 |
+| Barrel HP | 6 → 40 | 5 → 28 | 4 → 22 |
+| Gates removed | 70% | 35% | 10% |
+
+The knobs move together on purpose. L11 is sparse road, few enormous fights,
+expensive barrels and almost no gates — slow and heavy. L13 is dense road, small
+fights arriving constantly, cheap barrels and plenty of gates — fast and twitchy.
+L12 sits between them. Difficulty is held flat while everything about the
+texture changes.
+
+### The loop
+
+`EpicRoadLevelLoop` (execution order −500, so after `EpicRoadTestStartLevel` at
+−1000 and before `UniversalGameManager` at 0) replaces `LevelsPrefs` with a
+one-entry array holding the level that *should* play. `Mathf.Min(level, 1) - 1`
+is always 0, so the manager loads that one whatever the level number is.
+
+Levels 1–10 play once each, then 11, 12, 13 cycle forever: 14→L11, 15→L12,
+16→L13, 17→L11. The saved counter is never touched, so the HUD keeps counting
+up — level 14 still reads "14".
+
+`LoopStart` is a field, so the size of the repeating pool is just how many levels
+exist past it. Adding an L14 spec extends the cycle to four with no code change.
