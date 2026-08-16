@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Solo.MOST_IN_ONE;
 
@@ -41,18 +42,31 @@ namespace RunnerPac.EpicRoadRunner
         [Tooltip("A gate is still 'incoming' only while it is at least this far ahead of the player.")]
         [SerializeField] float aheadMargin = 1f;
 
-        [Tooltip("An enemy this far behind the player is treated as gone, so a stray " +
-                 "enemy that never engaged cannot stall the level forever.")]
-        [SerializeField] float behindCutoff = 15f;
-
         bool _fired;
         bool _sawContent;
+
+        // Enemies that have already drawn level with the player at least once.
+        //
+        // This is what fixes the 30-90s hang at the end of a run. The aggro trigger
+        // (CheckPoint, layer 10) sits at z = -28, BEHIND the player at z = 0, so an
+        // enemy only ever wakes up after it has already scrolled past you. It then
+        // chases you forward, back into z > playerZ + aheadMargin, where a purely
+        // positional test counts it as "incoming" again - forever, because bullets
+        // spawn on the squad and travel forward only, so an enemy sitting level with
+        // the squad can never be shot. Two such enemies were observed alive for 30+
+        // seconds while the level refused to end.
+        //
+        // Once an enemy has been level with you, it is behind you conceptually no
+        // matter where it drifts to. It is not content you have yet to face, so it
+        // must never hold the level open again.
+        readonly HashSet<WalkEnemyManager> _passed = new HashSet<WalkEnemyManager>();
 
         // Wired into UniversalGameManager.OnStartPlay so it begins with the run.
         public void Arm()
         {
             _fired = false;
             _sawContent = false;
+            _passed.Clear();
             StopAllCoroutines();
             StartCoroutine(Watch());
         }
@@ -124,7 +138,15 @@ namespace RunnerPac.EpicRoadRunner
                 // the enemy-heavy levels. They are no longer incoming, so they no longer
                 // count. If one is still grinding the squad down, that resolves as a
                 // loss on its own.
-                if (enemy.transform.position.z <= playerZ + aheadMargin) continue;
+                if (enemy.transform.position.z <= playerZ + aheadMargin)
+                {
+                    // Remember it, so that if it aggros and chases back in front of
+                    // the squad it cannot start counting as incoming all over again.
+                    _passed.Add(enemy);
+                    continue;
+                }
+                if (_passed.Contains(enemy)) continue;
+
                 remaining++;
             }
 
