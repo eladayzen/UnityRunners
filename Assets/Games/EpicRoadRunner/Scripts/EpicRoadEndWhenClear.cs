@@ -43,6 +43,11 @@ namespace RunnerPac.EpicRoadRunner
                  "so a late arrival keeps the run going.")]
         [Min(0f)] public float GraceBeforeEnd = 1.25f;
 
+        [Tooltip("Seconds the lose screen counts down before continuing on its own, " +
+                 "matching the win screen's hold. It presses the screen's own button, " +
+                 "so the restart path is identical to tapping it.")]
+        [Min(0f)] public float AutoContinueSeconds = 5f;
+
         [Tooltip("How far below the player an enemy may be before it is treated as " +
                  "fallen out of the world and ignored. Enemies are script-moved, so a " +
                  "large drop always means physics has taken them, never gameplay.")]
@@ -81,6 +86,67 @@ namespace RunnerPac.EpicRoadRunner
             _noKillSince = 0f;
             _identified = false;
             StartCoroutine(Loop());
+            StartCoroutine(WatchForLoseScreen());
+        }
+
+        // The lose screen gets the same treatment as the win screen, and the same
+        // auto-continue.
+        //
+        // Losing used to dead-end on "tap to continue" with no timer, so a run that
+        // ended badly just sat there. It now counts down and presses the button
+        // itself after AutoContinueSeconds - by invoking the button's own onClick,
+        // so it goes through exactly the same restart path a tap would, rather than
+        // a second implementation that could drift from it.
+        IEnumerator WatchForLoseScreen()
+        {
+            while (true)
+            {
+                GameObject lose = null;
+                foreach (var rt in FindObjectsByType<RectTransform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                {
+                    string n = rt.name.ToLower();
+                    if ((n.Contains("lose") || n.Contains("game over") || n.Contains("fail"))
+                        && !n.Contains("button") && rt.gameObject.activeInHierarchy)
+                    {
+                        lose = rt.gameObject;
+                        break;
+                    }
+                }
+
+                if (lose != null)
+                {
+                    Log($"LOSE SCREEN '{lose.name}' appeared - styling and starting {AutoContinueSeconds:F0}s countdown");
+                    EpicRoadWinScreenPolish.Apply(lose, this);
+                    yield return CountdownThenContinue(lose);
+                    yield break;
+                }
+
+                yield return new WaitForSeconds(0.25f);
+            }
+        }
+
+        IEnumerator CountdownThenContinue(GameObject screen)
+        {
+            // The button the player would otherwise have to tap.
+            UnityEngine.UI.Button button = null;
+            foreach (var b in screen.GetComponentsInChildren<UnityEngine.UI.Button>(true))
+            {
+                button = b;
+                break;
+            }
+
+            var labels = screen.GetComponentsInChildren<TMPro.TMP_Text>(true);
+            string original = labels.Length > 0 ? labels[labels.Length - 1].text : null;
+
+            for (float left = AutoContinueSeconds; left > 0f; left -= Time.unscaledDeltaTime)
+            {
+                if (labels.Length > 0 && original != null)
+                    labels[labels.Length - 1].text = original + "  (" + Mathf.CeilToInt(left) + ")";
+                yield return null;
+            }
+
+            if (button != null) button.onClick.Invoke();
+            else Log("LOSE SCREEN had no button to press - cannot auto-continue");
         }
 
         IEnumerator Loop()
@@ -344,6 +410,7 @@ namespace RunnerPac.EpicRoadRunner
                     if ((n.Contains("win") || n.Contains("complete")) && rt.gameObject.activeInHierarchy)
                     {
                         Log($"WIN SCREEN '{rt.name}' visible {Time.realtimeSinceStartup - t0:F2}s after the win was decided");
+                        EpicRoadWinScreenPolish.Apply(rt.gameObject, this);
                         seen = true;
                         break;
                     }
