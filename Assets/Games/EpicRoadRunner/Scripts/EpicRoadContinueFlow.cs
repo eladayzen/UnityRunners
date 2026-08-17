@@ -34,7 +34,8 @@ namespace RunnerPac.EpicRoadRunner
         // AutoAdvanceOnWin -> RestartCurrent(), and that path has driven every level
         // transition since progression was first wired.
         public static void Begin(GameObject endScreen, MonoBehaviour host, float seconds,
-                                 string caption = null, bool pressButtonAtEnd = false)
+                                 string caption = null, bool pressButtonAtEnd = false,
+                                 Sprite spinner = null)
         {
             if (endScreen == null || host == null) return;
             var flow = endScreen.GetComponent<EpicRoadContinueFlow>();
@@ -44,10 +45,10 @@ namespace RunnerPac.EpicRoadRunner
             // Driven by the host, not by the end screen. ShowOnly() can deactivate the
             // screen this component sits on, which would silently kill a coroutine
             // started here - and with it the only thing left to continue the game.
-            host.StartCoroutine(flow.Run(endScreen, seconds, caption, pressButtonAtEnd));
+            host.StartCoroutine(flow.Run(endScreen, seconds, caption, pressButtonAtEnd, spinner));
         }
 
-        IEnumerator Run(GameObject endScreen, float seconds, string caption, bool pressButtonAtEnd)
+        IEnumerator Run(GameObject endScreen, float seconds, string caption, bool pressButtonAtEnd, Sprite spinner)
         {
             // "GAME OVER" says the run stopped; "GAME RESTARTS IN" says what the
             // number underneath is counting towards.
@@ -55,6 +56,12 @@ namespace RunnerPac.EpicRoadRunner
 
             var button = FindButton(endScreen);
             HideButtons(endScreen);
+
+            // "GET READY" and a turning ring, so the screen says something is happening
+            // during the load rather than sitting still. The ring keeps turning until the
+            // scene swaps and takes this whole screen with it.
+            MakeLabel(endScreen, "GetReady", "GET READY", 64f, -120f);
+            var ring = MakeSpinner(endScreen, spinner, -260f);
 
             var manager = FindFirstObjectByType<Solo.MOST_IN_ONE.UniversalGameManager>();
 
@@ -88,9 +95,12 @@ namespace RunnerPac.EpicRoadRunner
                     yield break;
                 }
 
+                if (ring != null) ring.Rotate(0f, 0f, -SpinDegreesPerSecond * Time.unscaledDeltaTime);
                 yield return null;
             }
         }
+
+        const float SpinDegreesPerSecond = 220f;
 
         static UnityEngine.UI.Button FindButton(GameObject endScreen)
         {
@@ -122,6 +132,49 @@ namespace RunnerPac.EpicRoadRunner
                 b.gameObject.SetActive(false);
         }
 
+        // Plain text on the screen, using a font already present so it actually draws.
+        static TMP_Text MakeLabel(GameObject endScreen, string name, string content,
+                                  float size, float y)
+        {
+            var text = NewText(endScreen, name, size, y);
+            if (text != null) text.text = content;
+            return text;
+        }
+
+        // A turning ring. The sprite is whatever the scene component was given; if that
+        // is empty, any circular sprite already in the UI is reused, and failing that the
+        // spinner is simply skipped rather than drawing an untextured white box.
+        static Transform MakeSpinner(GameObject endScreen, Sprite sprite, float y)
+        {
+            if (sprite == null) sprite = FindCircleSprite();
+            if (sprite == null) return null;
+
+            var go = new GameObject("Spinner", typeof(RectTransform));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(endScreen.transform, false);
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = new Vector2(0f, y);
+            rt.sizeDelta = new Vector2(110f, 110f);
+
+            var img = go.AddComponent<UnityEngine.UI.Image>();
+            img.sprite = sprite;
+            img.raycastTarget = false;
+            img.preserveAspect = true;
+            return rt;
+        }
+
+        static Sprite FindCircleSprite()
+        {
+            foreach (var img in FindObjectsByType<UnityEngine.UI.Image>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (img.sprite == null) continue;
+                string n = img.sprite.name.ToLower();
+                if (n.Contains("circle") || n.Contains("ring") || n.Contains("charge"))
+                    return img.sprite;
+            }
+            return null;
+        }
+
         // A big number where the button used to be.
         //
         // The font is copied from text already on the screen. A TextMeshProUGUI added
@@ -142,12 +195,31 @@ namespace RunnerPac.EpicRoadRunner
                 break;
             }
 
-            var go = new GameObject("Countdown", typeof(RectTransform));
+            return NewText(endScreen, "Countdown", 120f, -420f);
+        }
+
+        // Shared text factory. The font is copied from text already on the screen: a
+        // TextMeshProUGUI on a bare GameObject has no font asset unless TMP_Settings
+        // supplies a default, and when it does not the component exists, reports no
+        // error, and draws absolutely nothing.
+        static TMP_Text NewText(GameObject endScreen, string name, float size, float y)
+        {
+            TMP_FontAsset font = null;
+            Material fontMaterial = null;
+            foreach (var existing in endScreen.GetComponentsInChildren<TMP_Text>(true))
+            {
+                if (existing.font == null) continue;
+                font = existing.font;
+                fontMaterial = existing.fontSharedMaterial;
+                break;
+            }
+
+            var go = new GameObject(name, typeof(RectTransform));
             var rt = (RectTransform)go.transform;
             rt.SetParent(endScreen.transform, false);
             rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.anchoredPosition = new Vector2(0f, -240f);
-            rt.sizeDelta = new Vector2(600f, 220f);
+            rt.anchoredPosition = new Vector2(0f, y);
+            rt.sizeDelta = new Vector2(700f, 200f);
             rt.localScale = Vector3.one;
 
             var text = go.AddComponent<TextMeshProUGUI>();
@@ -156,7 +228,7 @@ namespace RunnerPac.EpicRoadRunner
                 text.font = font;
                 if (fontMaterial != null) text.fontSharedMaterial = fontMaterial;
             }
-            text.fontSize = 120f;
+            text.fontSize = size;
             text.alignment = TextAlignmentOptions.Center;
             text.color = Color.white;
             text.enableWordWrapping = false;

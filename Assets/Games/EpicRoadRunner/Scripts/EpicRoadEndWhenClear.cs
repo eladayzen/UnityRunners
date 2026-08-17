@@ -62,6 +62,11 @@ namespace RunnerPac.EpicRoadRunner
                  "screen. Leave empty to omit the line.")]
         public string GemsDataName = "";
 
+        [Tooltip("Sprite for the turning ring on the end screens. Leave empty and any " +
+                 "circular sprite already in the UI is reused - drop your own in here to " +
+                 "replace it.")]
+        public Sprite SpinnerSprite;
+
         [Header("Diagnostics")]
         public bool LogChecks = true;
         public string LogPath = "/tmp/epicroad-timeline.txt";
@@ -102,27 +107,49 @@ namespace RunnerPac.EpicRoadRunner
         // itself after AutoContinueSeconds - by invoking the button's own onClick,
         // so it goes through exactly the same restart path a tap would, rather than
         // a second implementation that could drift from it.
+        // The end screens are found ONCE and remembered.
+        //
+        // These used to be located by scanning every RectTransform in the scene, with
+        // inactive included, and lowercasing each name - every single frame, for the
+        // whole level. That allocates a string per UI object per frame, which is
+        // constant GC pressure, and it is worst exactly when an end screen appears and
+        // the UI has real work to do. It was a large part of the hitch on the way into
+        // the end screen. The panels exist (inactive) from scene load, so one scan is
+        // enough and the per-frame check becomes a bool.
+        GameObject FindScreenOnce(ref GameObject cache, params string[] keys)
+        {
+            if (cache != null) return cache;
+
+            foreach (var rt in FindObjectsByType<RectTransform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                string n = rt.name.ToLower();
+                if (n.Contains("button")) continue;
+                foreach (var k in keys)
+                {
+                    if (!n.Contains(k)) continue;
+                    cache = rt.gameObject;
+                    return cache;
+                }
+            }
+            return null;
+        }
+
+        GameObject _loseScreen, _winScreen;
+
         IEnumerator WatchForLoseScreen()
         {
+            FindScreenOnce(ref _loseScreen, "lose", "game over", "fail");
+
             while (true)
             {
-                GameObject lose = null;
-                foreach (var rt in FindObjectsByType<RectTransform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-                {
-                    string n = rt.name.ToLower();
-                    if ((n.Contains("lose") || n.Contains("game over") || n.Contains("fail"))
-                        && !n.Contains("button") && rt.gameObject.activeInHierarchy)
-                    {
-                        lose = rt.gameObject;
-                        break;
-                    }
-                }
+                GameObject lose = (_loseScreen != null && _loseScreen.activeInHierarchy)
+                    ? _loseScreen : null;
 
                 if (lose != null)
                 {
                     Log($"LOSE SCREEN '{lose.name}' appeared - styling, preloading, {AutoContinueSeconds:F0}s countdown");
                     EpicRoadWinScreenPolish.Apply(lose, this);
-                    EpicRoadContinueFlow.Begin(lose, this, AutoContinueSeconds, "GAME RESTARTS IN", pressButtonAtEnd: true);
+                    EpicRoadContinueFlow.Begin(lose, this, AutoContinueSeconds, "GAME OVER", pressButtonAtEnd: true, spinner: SpinnerSprite);
                     yield break;
                 }
 
@@ -395,21 +422,18 @@ namespace RunnerPac.EpicRoadRunner
             float t0 = Time.realtimeSinceStartup;
             bool seen = false;
 
+            FindScreenOnce(ref _winScreen, "win", "complete");
+
             while (Time.realtimeSinceStartup - t0 < 30f)
             {
-                foreach (var rt in FindObjectsByType<RectTransform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                if (_winScreen != null && _winScreen.activeInHierarchy)
                 {
-                    string n = rt.name.ToLower();
-                    if ((n.Contains("win") || n.Contains("complete")) && rt.gameObject.activeInHierarchy)
-                    {
-                        Log($"WIN SCREEN '{rt.name}' visible {Time.realtimeSinceStartup - t0:F2}s after the win was decided");
-                        EpicRoadWinScreenPolish.Apply(rt.gameObject, this);
-                        EpicRoadContinueFlow.Begin(rt.gameObject, this, WinHoldSeconds);
-                        seen = true;
-                        break;
-                    }
+                    Log($"WIN SCREEN '{_winScreen.name}' visible {Time.realtimeSinceStartup - t0:F2}s after the win was decided");
+                    EpicRoadWinScreenPolish.Apply(_winScreen, this);
+                    EpicRoadContinueFlow.Begin(_winScreen, this, WinHoldSeconds, spinner: SpinnerSprite);
+                    seen = true;
+                    yield break;
                 }
-                if (seen) yield break;
                 yield return null;
             }
 
