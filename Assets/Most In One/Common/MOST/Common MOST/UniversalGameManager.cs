@@ -254,7 +254,8 @@ namespace Solo.MOST_IN_ONE
                 if (menu.Name == OnWinMenuName) ShowOnly(menu.TargetObject, menu.DeactivateAllOnEnable);
                 if (AutoAdvanceOnWin)
                 {
-                    yield return new WaitForSeconds(NextLevelDelay);
+                    // The loader owns the timing from here: let the screen settle, then
+                    // load, then count down once the level is actually ready.
                     RestartCurrent();
                 }
             }
@@ -272,8 +273,27 @@ namespace Solo.MOST_IN_ONE
         public void LoadLevel(int value) => SetAndLoad(Mathf.Max(1, value));
         public void RestartCurrent() => SetAndLoad(_currentLevel, writeToDatabase: false);
 
+        [Tooltip("Seconds the end screen gets to itself before loading starts, so its " +
+                 "animation is not fighting the load for frames.")]
+        [Min(0f)] public float SettleBeforeLoad = 1.2f;
+
+        [Tooltip("Seconds of visible countdown AFTER the next level has finished loading. " +
+                 "Only shown once the level is ready, so the number is always honest.")]
+        [Min(0f)] public float CountdownAfterReady = 3f;
+
+        // -1 when not counting. An end screen can watch this to draw a countdown that
+        // reflects the real remaining time rather than guessing at it.
+        public float CountdownRemaining { get; private set; } = -1f;
+
+        // Guards against two continues landing at once - a button press and an
+        // auto-advance, say. A second synchronous load on top of the first is how a
+        // level gets skipped or the game locks up.
+        bool _loading;
+
         void SetAndLoad(int level, bool writeToDatabase = true)
         {
+            if (_loading) return;
+
             if (writeToDatabase)
             {
                 var data = DatabaseHolder.Get<IntData>(LevelDataName);
@@ -290,7 +310,7 @@ namespace Solo.MOST_IN_ONE
                     : GetLevelSceneNameByIndex(idx);
 
                 if (!string.IsNullOrEmpty(targetName))
-                    SceneManager.LoadScene(targetName);
+                    StartCoroutine(LoadSceneWithoutFreezing(targetName));
                 else
                     Debug.LogError("[UniversalGameManager] Target scene name is empty.");
             }
@@ -298,10 +318,58 @@ namespace Solo.MOST_IN_ONE
             {
                 var main = GetMainMenuName();
                 if (!string.IsNullOrEmpty(main))
-                    SceneManager.LoadScene(main);
+                    StartCoroutine(LoadSceneWithoutFreezing(main));
                 else
                     Debug.LogError("[UniversalGameManager] MainMenu scene name is empty.");
             }
+        }
+
+        // Loads the next level without stalling the game.
+        //
+        // This used to be SceneManager.LoadScene, the synchronous variant, which blocks
+        // the main thread until the whole scene is torn down and rebuilt - including
+        // instantiating every prop and enemy of the next level. Measured between 1s and
+        // 12s on EpicRoad depending on the level, as a hard freeze with nothing drawn.
+        // Both the win auto-advance and the lose screen's Continue reach this through
+        // RestartCurrent(), so both paid for it.
+        //
+        // LoadSceneAsync spreads that work across frames, so the end screen stays live
+        // and animating while the next level builds behind it.
+        IEnumerator LoadSceneWithoutFreezing(string sceneName)
+        {
+            _loading = true;
+            CountdownRemaining = -1f;
+
+            // 1. The end screen gets the stage to itself. Starting the load at the same
+            //    moment the screen appears makes its pop-in animation stutter and can
+            //    swallow the countdown entirely - loading competes for the same frames.
+            for (float t = 0f; t < SettleBeforeLoad; t += Time.unscaledDeltaTime)
+                yield return null;
+
+            // 2. Now load, with the swap blocked. No countdown yet: until this finishes
+            //    there is no honest number to show.
+            var op = SceneManager.LoadSceneAsync(sceneName);
+            if (op == null)
+            {
+                Debug.LogError($"[UniversalGameManager] Could not start loading '{sceneName}'.");
+                _loading = false;
+                yield break;
+            }
+            op.allowSceneActivation = false;
+            while (op.progress < 0.9f) yield return null;
+
+            // 3. Ready. Count down in the open, then swap - which is instant, because
+            //    the scene is already built.
+            for (float left = CountdownAfterReady; left > 0f; left -= Time.unscaledDeltaTime)
+            {
+                CountdownRemaining = left;
+                yield return null;
+            }
+            CountdownRemaining = -1f;
+
+            op.allowSceneActivation = true;
+            while (!op.isDone) yield return null;
+            // Nothing after this runs: the reload has replaced this object.
         }
 
         public void Loading(int level)

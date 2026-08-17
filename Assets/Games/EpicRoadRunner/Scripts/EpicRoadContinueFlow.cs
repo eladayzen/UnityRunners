@@ -55,18 +55,41 @@ namespace RunnerPac.EpicRoadRunner
 
             var button = FindButton(endScreen);
             HideButtons(endScreen);
-            var label = MakeCountdownLabel(endScreen);
 
-            for (float left = seconds; left > 0f; left -= Time.unscaledDeltaTime)
+            var manager = FindFirstObjectByType<Solo.MOST_IN_ONE.UniversalGameManager>();
+
+            // Losing has no auto-advance of its own, so start the manager's sequence
+            // here. Winning has already started it. Either way the manager owns the
+            // timing: screen settles, then it loads, then it counts down.
+            if (pressButtonAtEnd)
             {
-                if (label != null) label.text = Mathf.CeilToInt(left).ToString();
+                if (manager != null) manager.RestartCurrent();
+                else if (button != null) { button.onClick.Invoke(); yield break; }
+            }
+
+            // No label until there is something true to put in it. The countdown only
+            // exists once the next level has finished loading, so it never shows a
+            // number that the load might overrun.
+            TMP_Text label = null;
+            while (manager != null)
+            {
+                float left = manager.CountdownRemaining;
+
+                if (left >= 0f)
+                {
+                    if (label == null) label = MakeCountdownLabel(endScreen);
+                    label.text = Mathf.CeilToInt(left).ToString();
+                }
+                else if (label != null)
+                {
+                    // Reached zero - remove it rather than leaving it frozen on "1"
+                    // while the scene swaps.
+                    Destroy(label.gameObject);
+                    yield break;
+                }
+
                 yield return null;
             }
-            if (label != null) label.text = "";
-
-            // Losing restarts through the screen's own button, so the restart path is
-            // identical to a tap. Winning is already handled by the manager.
-            if (pressButtonAtEnd && button != null) button.onClick.Invoke();
         }
 
         static UnityEngine.UI.Button FindButton(GameObject endScreen)

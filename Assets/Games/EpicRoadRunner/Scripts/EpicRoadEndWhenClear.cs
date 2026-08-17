@@ -48,6 +48,11 @@ namespace RunnerPac.EpicRoadRunner
                  "so the restart path is identical to tapping it.")]
         [Min(0f)] public float AutoContinueSeconds = 5f;
 
+        [Tooltip("Seconds the WIN screen holds before the next level swaps in. Pushed " +
+                 "into UniversalGameManager.NextLevelDelay at level start, so the number " +
+                 "on screen and the actual swap cannot drift apart.")]
+        [Min(0f)] public float WinHoldSeconds = 8f;
+
         [Tooltip("How far below the player an enemy may be before it is treated as " +
                  "fallen out of the world and ignored. Enemies are script-moved, so a " +
                  "large drop always means physics has taken them, never gameplay.")]
@@ -121,7 +126,10 @@ namespace RunnerPac.EpicRoadRunner
                     yield break;
                 }
 
-                yield return new WaitForSeconds(0.25f);
+                // Every frame, not every quarter second. The win screen is caught on a
+                // per-frame poll, and matching that here removes up to 0.25s of extra
+                // lag that made losing feel heavier than winning for no reason.
+                yield return null;
             }
         }
 
@@ -131,6 +139,15 @@ namespace RunnerPac.EpicRoadRunner
             if (character == null) character = FindFirstObjectByType<CharacterControl_ShootRunner>();
 
             Log("=== EndWhenClear armed (every " + CheckEvery + "s, looking " + LookAhead + " units ahead) ===");
+
+            // One source of truth for the win hold. The countdown drawn on the win screen
+            // is cosmetic - the manager decides when the level actually swaps, on
+            // NextLevelDelay - so the two must be the same number or the counter lies.
+            if (manager != null && !Mathf.Approximately(manager.NextLevelDelay, WinHoldSeconds))
+            {
+                manager.NextLevelDelay = WinHoldSeconds;
+                Log($"win hold set to {WinHoldSeconds:F0}s (NextLevelDelay)");
+            }
 
             // Stop the round-mode wave hordes falling out of the world.
             //
@@ -387,7 +404,7 @@ namespace RunnerPac.EpicRoadRunner
                     {
                         Log($"WIN SCREEN '{rt.name}' visible {Time.realtimeSinceStartup - t0:F2}s after the win was decided");
                         EpicRoadWinScreenPolish.Apply(rt.gameObject, this);
-                        EpicRoadContinueFlow.Begin(rt.gameObject, this, AutoContinueSeconds);
+                        EpicRoadContinueFlow.Begin(rt.gameObject, this, WinHoldSeconds);
                         seen = true;
                         break;
                     }
