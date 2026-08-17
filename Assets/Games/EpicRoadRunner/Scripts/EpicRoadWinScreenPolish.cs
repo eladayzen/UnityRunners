@@ -6,16 +6,19 @@ using TMPro;
 
 namespace RunnerPac.EpicRoadRunner
 {
-    // Restyles and animates the stock win screen: bigger type, everything stacked
-    // down the centre, and each block popping in after the one above it.
+    // Lays out and animates the end screens: bigger type, one centred column,
+    // blocks popping in one after another.
     //
-    // Done at runtime rather than by editing the scene's UI, so it needs no wiring
-    // and cannot be undone by a rebuild. It runs once, when the win screen appears.
+    // AUTHORED, NOT PRESERVED. Earlier versions tried to keep each element's existing
+    // arrangement and merely shift it - re-anchoring to centre while restoring world
+    // position, then moving groups by a shared delta. That failed twice, because the
+    // arrangement being preserved was itself wrong (gem pill far left, count far
+    // right) and because re-anchoring a stretched rect displaces it, which is what
+    // flung the "x3" into a corner. Every position here is now stated outright.
     //
-    // The three blocks are moved as groups, not as individual elements: the score
-    // readout is really four overlapping objects (border, gem icon, multiplier,
-    // text) whose relative arrangement is deliberate. Shifting them by a shared
-    // delta keeps that intact while still stacking the screen as a whole.
+    // Positions are also re-asserted for a couple of seconds, because the stock menu
+    // has its own show-animation that moves these same elements after this runs and
+    // would otherwise win.
     public class EpicRoadWinScreenPolish : MonoBehaviour
     {
         [Tooltip("Seconds each block takes to pop in.")]
@@ -27,131 +30,160 @@ namespace RunnerPac.EpicRoadRunner
         [Tooltip("How much bigger the text gets.")]
         public float TextScale = 1.4f;
 
-        [Tooltip("Vertical positions for title / score / button, in canvas units.")]
-        public float TitleY = 320f, ScoreY = 40f, ButtonY = -340f;
+        [Tooltip("Vertical position of the title and of the score row.")]
+        public float TitleY = 250f, ScoreY = 20f;
+
+        [Tooltip("X of the gem icon (and its pill) and of the count, so they read as " +
+                 "one [gem] 50 unit either side of centre.")]
+        public float ScoreGemX = -95f, ScoreCountX = 55f;
+
+        [Tooltip("Offset of the 'x3' multiplier from the count - up and to the right, " +
+                 "like a superscript.")]
+        public Vector2 MultiplierOffset = new Vector2(70f, 45f);
 
         [Tooltip("Scale a block starts at before popping to full size.")]
         public float StartScale = 0.55f;
 
-        public static void Apply(GameObject winScreen, MonoBehaviour host)
+        [Tooltip("Leave the scene's own layout alone and only animate. ON, because the " +
+                 "end screens are laid out by hand in the scene now - this script cannot " +
+                 "see the result and should not overrule it.")]
+        public bool RespectManualLayout = true;
+
+        [Tooltip("Seconds to keep re-asserting positions, so the stock menu animation " +
+                 "cannot drag elements back.")]
+        public float HoldLayout = 2f;
+
+        public static void Apply(GameObject screen, MonoBehaviour host)
         {
-            if (winScreen == null || host == null) return;
-            var polish = winScreen.GetComponent<EpicRoadWinScreenPolish>();
-            if (polish == null) polish = winScreen.AddComponent<EpicRoadWinScreenPolish>();
-            polish.StartCoroutine(polish.Run(winScreen));
+            if (screen == null || host == null) return;
+            var polish = screen.GetComponent<EpicRoadWinScreenPolish>();
+            if (polish != null) return;                  // already handled
+            polish = screen.AddComponent<EpicRoadWinScreenPolish>();
+            polish.StartCoroutine(polish.Run(screen));
         }
 
-        bool _done;
+        RectTransform _title, _gem, _border, _count, _multi;
+        readonly List<RectTransform> _titleGroup = new List<RectTransform>();
+        readonly List<RectTransform> _scoreGroup = new List<RectTransform>();
 
-        IEnumerator Run(GameObject winScreen)
+        IEnumerator Run(GameObject screen)
         {
-            if (_done) yield break;
-            _done = true;
-
-            // One frame, so the stock show-animation has set up its own transforms
-            // before anything here overwrites them.
+            // One frame so the stock show-animation has started and its own setup is
+            // out of the way before anything here is applied.
             yield return null;
 
-            var title = new List<RectTransform>();
-            var score = new List<RectTransform>();
-            var button = new List<RectTransform>();
+            Collect(screen);
 
-            foreach (Transform child in winScreen.transform)
+            // The layout in the scene is now hand-made, and hand-made beats anything
+            // guessed from here - especially since this script cannot see the result.
+            // Three attempts at positioning these elements blind produced a gem pill
+            // adrift from its counter and an "x3" in the corner. Only the animation is
+            // kept; where things sit is the scene's business.
+            if (!RespectManualLayout)
+            {
+                Enlarge();
+                ApplyLayout();
+                StartCoroutine(HoldPositions());
+            }
+
+            SetScale(_titleGroup, 0f);
+            SetScale(_scoreGroup, 0f);
+
+            yield return Pop(_titleGroup);
+            yield return new WaitForSecondsRealtime(Stagger);
+            yield return Pop(_scoreGroup);
+        }
+
+        void Collect(GameObject screen)
+        {
+            foreach (Transform child in screen.transform)
             {
                 var rt = child as RectTransform;
                 if (rt == null) continue;
 
                 string n = child.name.ToLower();
-                if (n.Contains("title")) title.Add(rt);
-                else if (n.Contains("button")) button.Add(rt);
-                else score.Add(rt);          // border, gems text, multiplier, gem icon
+
+                // Order matters: "Total Gems Text" also contains "gem", so the count is
+                // matched on being text, and the icon on being an Image, before any
+                // name-only guess.
+                if (n.Contains("button")) continue;                       // hidden anyway
+                else if (n.Contains("title")) { _title = rt; _titleGroup.Add(rt); }
+                else if (n.Contains("multi")) { _multi = rt; _scoreGroup.Add(rt); }
+                else if (n.Contains("border")) { _border = rt; _scoreGroup.Add(rt); }
+                else if (rt.GetComponent<TMP_Text>() != null || rt.GetComponent<Text>() != null)
+                { _count = rt; _scoreGroup.Add(rt); }
+                else { _gem = rt; _scoreGroup.Add(rt); }                  // the icon
             }
-
-            Enlarge(title, TextScale);
-            Enlarge(score, TextScale);
-            Enlarge(button, TextScale * 0.85f);   // the button needs less
-
-            Stack(title, TitleY);
-            Stack(score, ScoreY);
-            Stack(button, ButtonY);
-
-            // Hide everything, then bring the blocks in one after another.
-            SetScale(title, 0f);
-            SetScale(score, 0f);
-            SetScale(button, 0f);
-
-            yield return Pop(title);
-            yield return new WaitForSecondsRealtime(Stagger);
-            yield return Pop(score);
-            yield return new WaitForSecondsRealtime(Stagger);
-            yield return Pop(button);
         }
 
-        void Enlarge(List<RectTransform> group, float factor)
+        void Enlarge()
         {
-            foreach (var rt in group)
+            foreach (var rt in _titleGroup) Scale(rt, TextScale);
+            foreach (var rt in _scoreGroup) Scale(rt, TextScale);
+        }
+
+        static void Scale(RectTransform rt, float factor)
+        {
+            foreach (var t in rt.GetComponentsInChildren<TMP_Text>(true)) t.fontSize *= factor;
+            foreach (var t in rt.GetComponentsInChildren<Text>(true))
+                t.fontSize = Mathf.RoundToInt(t.fontSize * factor);
+        }
+
+        void ApplyLayout()
+        {
+            Place(_title, new Vector2(0f, TitleY));
+            Place(_border, new Vector2(ScoreGemX, ScoreY));
+            Place(_gem, new Vector2(ScoreGemX, ScoreY));
+            Place(_count, new Vector2(ScoreCountX, ScoreY));
+            Place(_multi, new Vector2(ScoreCountX + MultiplierOffset.x, ScoreY + MultiplierOffset.y));
+
+            // The count is right-aligned inside a rect far wider than its digits, so
+            // centring the rect alone still draws the number at the rect's right edge.
+            if (_count != null)
             {
-                foreach (var t in rt.GetComponentsInChildren<TMP_Text>(true)) t.fontSize *= factor;
-                foreach (var t in rt.GetComponentsInChildren<Text>(true)) t.fontSize = Mathf.RoundToInt(t.fontSize * factor);
+                var t = _count.GetComponent<TMP_Text>();
+                if (t != null) t.alignment = TextAlignmentOptions.Center;
+                var legacy = _count.GetComponent<Text>();
+                if (legacy != null) legacy.alignment = TextAnchor.MiddleCenter;
             }
         }
 
-        // Centre the group horizontally and move it, as a unit, to targetY.
-        //
-        // Both axes move by a SHARED delta. Setting each element's x to zero
-        // individually is what threw the gem counter off to one side: these elements
-        // do not share anchors, so an element anchored to the right edge stays pinned
-        // there no matter what its anchoredPosition says. Anchors are normalised to
-        // the centre first (preserving on-screen position and size), which makes
-        // anchoredPosition mean the same thing for every element, and only then is the
-        // group shifted - so the gem icon, its counter and the border keep their
-        // relative arrangement.
-        void Stack(List<RectTransform> group, float targetY)
+        // Anchors, pivot and position are all stated - nothing is inferred from what
+        // the element used to be, which is where the previous attempts went wrong.
+        static void Place(RectTransform rt, Vector2 pos)
         {
-            if (group.Count == 0) return;
-
-            foreach (var rt in group) CentreAnchors(rt);
-
-            Vector2 sum = Vector2.zero;
-            foreach (var rt in group) sum += rt.anchoredPosition;
-            Vector2 centroid = sum / group.Count;
-
-            Vector2 delta = new Vector2(-centroid.x, targetY - centroid.y);
-            foreach (var rt in group) rt.anchoredPosition += delta;
+            if (rt == null) return;
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = pos;
         }
 
-        // Re-anchor to the parent's centre without moving or resizing the element.
-        static void CentreAnchors(RectTransform rt)
+        IEnumerator HoldPositions()
         {
-            Vector2 size = rt.rect.size;
-            Vector3 world = rt.position;
-
-            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.sizeDelta = size;
-            rt.position = world;
+            for (float t = 0f; t < HoldLayout; t += Time.unscaledDeltaTime)
+            {
+                ApplyLayout();
+                yield return null;
+            }
         }
 
         static void SetScale(List<RectTransform> group, float s)
         {
-            foreach (var rt in group) rt.localScale = Vector3.one * s;
+            foreach (var rt in group) if (rt != null) rt.localScale = Vector3.one * s;
         }
 
         IEnumerator Pop(List<RectTransform> group)
         {
             if (group.Count == 0) yield break;
-
             for (float t = 0f; t < PopDuration; t += Time.unscaledDeltaTime)
             {
-                float k = Mathf.Clamp01(t / PopDuration);
-                SetScale(group, Overshoot(StartScale, 1f, k));
+                SetScale(group, Overshoot(StartScale, 1f, Mathf.Clamp01(t / PopDuration)));
                 yield return null;
             }
             SetScale(group, 1f);
         }
 
-        // Back-out easing: shoots past full size, then settles. This is what makes it
-        // read as a pop rather than a fade.
+        // Back-out easing: shoots past full size then settles, which is what reads as
+        // a pop rather than a fade.
         static float Overshoot(float from, float to, float k)
         {
             const float s = 1.70158f;

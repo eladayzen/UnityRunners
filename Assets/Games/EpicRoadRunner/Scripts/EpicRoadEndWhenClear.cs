@@ -115,38 +115,14 @@ namespace RunnerPac.EpicRoadRunner
 
                 if (lose != null)
                 {
-                    Log($"LOSE SCREEN '{lose.name}' appeared - styling and starting {AutoContinueSeconds:F0}s countdown");
+                    Log($"LOSE SCREEN '{lose.name}' appeared - styling, preloading, {AutoContinueSeconds:F0}s countdown");
                     EpicRoadWinScreenPolish.Apply(lose, this);
-                    yield return CountdownThenContinue(lose);
+                    EpicRoadContinueFlow.Begin(lose, this, AutoContinueSeconds, "GAME RESTARTS IN", pressButtonAtEnd: true);
                     yield break;
                 }
 
                 yield return new WaitForSeconds(0.25f);
             }
-        }
-
-        IEnumerator CountdownThenContinue(GameObject screen)
-        {
-            // The button the player would otherwise have to tap.
-            UnityEngine.UI.Button button = null;
-            foreach (var b in screen.GetComponentsInChildren<UnityEngine.UI.Button>(true))
-            {
-                button = b;
-                break;
-            }
-
-            var labels = screen.GetComponentsInChildren<TMPro.TMP_Text>(true);
-            string original = labels.Length > 0 ? labels[labels.Length - 1].text : null;
-
-            for (float left = AutoContinueSeconds; left > 0f; left -= Time.unscaledDeltaTime)
-            {
-                if (labels.Length > 0 && original != null)
-                    labels[labels.Length - 1].text = original + "  (" + Mathf.CeilToInt(left) + ")";
-                yield return null;
-            }
-
-            if (button != null) button.onClick.Invoke();
-            else Log("LOSE SCREEN had no button to press - cannot auto-continue");
         }
 
         IEnumerator Loop()
@@ -411,6 +387,7 @@ namespace RunnerPac.EpicRoadRunner
                     {
                         Log($"WIN SCREEN '{rt.name}' visible {Time.realtimeSinceStartup - t0:F2}s after the win was decided");
                         EpicRoadWinScreenPolish.Apply(rt.gameObject, this);
+                        EpicRoadContinueFlow.Begin(rt.gameObject, this, AutoContinueSeconds);
                         seen = true;
                         break;
                     }

@@ -2961,16 +2961,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 220610849}
-  m_LocalRotation: {x: 0, y: 0, z: 0.17364816, w: 0.9848078}
+  m_LocalRotation: {x: -0, y: -0, z: 0.17364816, w: 0.9848078}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1204225438}
+  m_Father: {fileID: 485596375}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 20}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -100, y: 300}
+  m_AnchoredPosition: {x: 134, y: -0.000050545}
   m_SizeDelta: {x: 110, y: 92}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &220610851
@@ -3110,47 +3110,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Palettes:
   - Name: Clear Day
-      SkyTint: {r: 0.45, g: 0.72, b: 1.0, a: 1}
-      GroundColor: {r: 0.46, g: 0.44, b: 0.42, a: 1}
-      SunColor: {r: 1.0, g: 0.98, b: 0.95, a: 1}
-      Ambient: {r: 0.82, g: 0.82, b: 0.82, a: 1}
+    SkyTint: {r: 0.45, g: 0.72, b: 1, a: 1}
+    GroundColor: {r: 0.46, g: 0.44, b: 0.42, a: 1}
+    SunColor: {r: 1, g: 0.98, b: 0.95, a: 1}
+    Ambient: {r: 0.82, g: 0.82, b: 0.82, a: 1}
     RoadBlocks: {r: 1, g: 1, b: 1, a: 1}
     RoadLines: {r: 1, g: 1, b: 1, a: 1}
-  - Name: Sunset
-      SkyTint: {r: 1.0, g: 0.55, b: 0.32, a: 1}
-      GroundColor: {r: 0.48, g: 0.32, b: 0.28, a: 1}
-      SunColor: {r: 1.0, g: 0.92, b: 0.84, a: 1}
-      Ambient: {r: 0.8, g: 0.76, b: 0.74, a: 1}
-    RoadBlocks: {r: 0.95, g: 0.72, b: 0.6, a: 1}
-    RoadLines: {r: 1, g: 0.9, b: 0.55, a: 1}
-  - Name: Candy Sky
-      SkyTint: {r: 1.0, g: 0.62, b: 0.88, a: 1}
-      GroundColor: {r: 0.56, g: 0.46, b: 0.56, a: 1}
-      SunColor: {r: 1.0, g: 0.94, b: 0.98, a: 1}
-      Ambient: {r: 0.84, g: 0.8, b: 0.84, a: 1}
-    RoadBlocks: {r: 0.45, g: 0.45, b: 0.75, a: 1}
-    RoadLines: {r: 0.6, g: 1, b: 0.95, a: 1}
-  - Name: Desert
-      SkyTint: {r: 1.0, g: 0.82, b: 0.5, a: 1}
-      GroundColor: {r: 0.62, g: 0.5, b: 0.32, a: 1}
-      SunColor: {r: 1.0, g: 0.96, b: 0.88, a: 1}
-      Ambient: {r: 0.84, g: 0.81, b: 0.76, a: 1}
-    RoadBlocks: {r: 1, g: 0.9, b: 0.68, a: 1}
-    RoadLines: {r: 1, g: 1, b: 0.8, a: 1}
-  - Name: Arctic
-      SkyTint: {r: 0.7, g: 0.92, b: 1.0, a: 1}
-      GroundColor: {r: 0.74, g: 0.8, b: 0.86, a: 1}
-      SunColor: {r: 0.95, g: 0.97, b: 1.0, a: 1}
-      Ambient: {r: 0.84, g: 0.86, b: 0.9, a: 1}
-    RoadBlocks: {r: 0.88, g: 0.94, b: 1, a: 1}
-    RoadLines: {r: 0.75, g: 0.88, b: 1, a: 1}
-  - Name: Meadow
-      SkyTint: {r: 0.62, g: 0.96, b: 0.72, a: 1}
-      GroundColor: {r: 0.5, g: 0.64, b: 0.44, a: 1}
-      SunColor: {r: 0.98, g: 1.0, b: 0.94, a: 1}
-      Ambient: {r: 0.84, g: 0.88, b: 0.82, a: 1}
-    RoadBlocks: {r: 0.65, g: 0.95, b: 0.6, a: 1}
-    RoadLines: {r: 0.95, g: 1, b: 0.45, a: 1}
   RoadBlocksMaterial: 
   RoadLinesMaterial: 
   LogChoice: 1
@@ -3186,6 +3151,10 @@ MonoBehaviour:
   CheckEvery: 1
   LookAhead: 45
   StartDelay: 2
+  GraceBeforeEnd: 1.25
+  AutoContinueSeconds: 5
+  MaxDropBelowRoad: 5
+  GemsDataName: 
   LogChecks: 1
   LogPath: /tmp/epicroad-timeline.txt
 --- !u!1001 &227640727
@@ -4673,7 +4642,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &456715230
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4817,7 +4786,11 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 741064018}
+  - {fileID: 220610850}
+  - {fileID: 1115953138}
+  - {fileID: 1924294340}
   m_Father: {fileID: 1204225438}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -7529,12 +7502,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1204225438}
+  m_Father: {fileID: 485596375}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -245, y: 300}
-  m_SizeDelta: {x: 600, y: 400}
+  m_AnchoredPosition: {x: -281.3269, y: 2.0001}
+  m_SizeDelta: {x: 259.346, y: 154}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &741064019
 MonoBehaviour:
@@ -7573,12 +7546,12 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 8782e8fd8eca645ea8d4a72f697884e3, type: 3}
-    m_FontSize: 99
+    m_FontSize: 80
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 298
-    m_Alignment: 3
+    m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -8947,7 +8920,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 700}
+  m_AnchoredPosition: {x: 0, y: 587}
   m_SizeDelta: {x: 1600, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &867494855
@@ -9019,7 +8992,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -9413,7 +9386,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &929577003
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10430,7 +10403,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1115953138
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10444,12 +10417,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 593619233}
-  m_Father: {fileID: 1204225438}
+  m_Father: {fileID: 485596375}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -800}
-  m_SizeDelta: {x: 1500, y: 2000}
+  m_AnchoredPosition: {x: 0, y: -1063}
+  m_SizeDelta: {x: 1500, y: 204.501}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1115953139
 MonoBehaviour:
@@ -11427,11 +11400,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 867494854}
-  - {fileID: 1115953138}
   - {fileID: 485596375}
-  - {fileID: 741064018}
-  - {fileID: 1924294340}
-  - {fileID: 220610850}
   m_Father: {fileID: 598984266}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -14118,7 +14087,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -17995,7 +17964,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1924294340
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18008,12 +17977,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1204225438}
+  m_Father: {fileID: 485596375}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -103, y: 373}
-  m_SizeDelta: {x: 600, y: 400}
+  m_AnchoredPosition: {x: 1371.9753, y: -15.334106}
+  m_SizeDelta: {x: 122.346, y: 223.333}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1924294341
 MonoBehaviour:
