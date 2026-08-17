@@ -47,26 +47,77 @@ namespace RunnerPac.EpicRoadRunner
         [Tooltip("Log which palette was chosen.")]
         public bool LogChoice = false;
 
+        [Tooltip("Use the built-in set below - one distinct palette per level - and ignore " +
+                 "the Palettes array above. Turn off to hand-author them in the Inspector.")]
+        public bool UseBuiltInPalettes = true;
+
+        // One palette per level, all bright, all casual, no beige and nothing gloomy.
+        //
+        // There were six, cycling, so level 7 looked like level 1 and every sixth level
+        // repeated forever. Two of the six were the dull ones: Desert was beige-brown and
+        // Arctic a grey-blue. These thirteen cover the thirteen authored levels, so no two
+        // look alike on a full run.
+        //
+        // Ground stays at or above 0.5 and ambient at or above 0.84 - the old set dropped
+        // to 0.06 ground and 0.55 ambient, which is where "dark" came from. Sky carries the
+        // identity; the road stays grey so gates and enemies remain readable.
+        static Palette[] BuiltIn => new[]
+        {
+            Make("Sky Blue",   0.45f, 0.75f, 1.00f,  0.52f, 0.56f, 0.60f),
+            Make("Bubblegum",  1.00f, 0.55f, 0.80f,  0.62f, 0.48f, 0.58f),
+            Make("Mint",       0.50f, 1.00f, 0.85f,  0.52f, 0.66f, 0.60f),
+            Make("Lemon",      1.00f, 0.92f, 0.45f,  0.66f, 0.62f, 0.44f),
+            Make("Lavender",   0.72f, 0.62f, 1.00f,  0.58f, 0.54f, 0.68f),
+            Make("Coral",      1.00f, 0.60f, 0.50f,  0.66f, 0.50f, 0.46f),
+            Make("Aqua",       0.40f, 0.90f, 1.00f,  0.50f, 0.64f, 0.68f),
+            Make("Peach",      1.00f, 0.75f, 0.60f,  0.68f, 0.56f, 0.48f),
+            Make("Lime",       0.72f, 1.00f, 0.50f,  0.58f, 0.68f, 0.46f),
+            Make("Violet",     0.85f, 0.65f, 1.00f,  0.62f, 0.54f, 0.68f),
+            Make("Turquoise",  0.45f, 0.95f, 0.90f,  0.48f, 0.66f, 0.64f),
+            Make("Rose",       1.00f, 0.65f, 0.72f,  0.66f, 0.52f, 0.56f),
+            Make("Sunburst",   1.00f, 0.85f, 0.40f,  0.68f, 0.60f, 0.42f),
+        };
+
+        static Palette Make(string name, float sr, float sg, float sb,
+                            float gr, float gg, float gb)
+        {
+            return new Palette
+            {
+                Name = name,
+                SkyTint = new Color(sr, sg, sb),
+                GroundColor = new Color(gr, gg, gb),
+                // Near-white sun and a high ambient, so no palette reads as overcast.
+                SunColor = new Color(1.00f, 0.98f, 0.95f),
+                Ambient = new Color(0.86f, 0.86f, 0.86f),
+                RoadBlocks = Color.white,
+                RoadLines = Color.white,
+            };
+        }
+
+        Palette[] Active => (UseBuiltInPalettes || Palettes == null || Palettes.Length == 0)
+            ? BuiltIn : Palettes;
+
         static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         static readonly int ColorId = Shader.PropertyToID("_Color");
 
         void Start()
         {
-            if (Palettes == null || Palettes.Length == 0) return;
-            Apply(Palettes[PaletteIndexForCurrentLevel()]);
+            var list = Active;
+            if (list == null || list.Length == 0) return;
+            Apply(list[PaletteIndexForCurrentLevel(list.Length)]);
         }
 
         // Tied to the level number, not random. A level should look the same every
         // time you play it - a background that changes on every retry reads as a
         // glitch rather than variety, and makes levels harder to tell apart.
-        int PaletteIndexForCurrentLevel()
+        int PaletteIndexForCurrentLevel(int count)
         {
             var manager = FindFirstObjectByType<UniversalGameManager>();
             if (manager != null && manager.DatabaseHolder != null)
             {
                 var data = manager.DatabaseHolder.Get<IntData>(manager.LevelDataName);
                 if (data != null)
-                    return Mathf.Abs(data.Value - 1) % Palettes.Length;
+                    return Mathf.Abs(data.Value - 1) % count;
             }
             return 0;
         }
